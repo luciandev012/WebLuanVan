@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using WebLuanVan.Data.Services.Common;
 
 namespace WebLuanVan.BackendApi
 {
@@ -30,6 +31,7 @@ namespace WebLuanVan.BackendApi
                 var uri = s.GetRequiredService<IConfiguration>()["MongoUri"];
                 return new MongoClient(uri);
             });
+            services.AddTransient<IStorageService, StorageService>();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Swagger WebLuanVan Solution", Version = "v1" });

@@ -6,6 +6,7 @@ using System.Text;
 
 namespace WebLuanVan.Data.Entity
 {
+    
     public class Thesis
     {
         [BsonId]
@@ -29,8 +30,8 @@ namespace WebLuanVan.Data.Entity
         [BsonElement("thesisId")]
         public string ThesisId { get; set; }
         [BsonElement("createdAt")]
-        public DateTime CreatedAt { get; set; }
+        public DateTime? CreatedAt { get; set; }
         [BsonElement("updatedAt")]
-        public DateTime UpdatedAt { get; set; }
+        public DateTime? UpdatedAt { get; set; }
     }
 }
