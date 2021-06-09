@@ -18,8 +18,8 @@ namespace WebLuanVan.Data.Entity
         public string PhoneNumber { get; set; }
         [BsonElement("studentName")]
         public string StudentName { get; set; }
-        [BsonElement("studentCode")]
-        public string StudentCode { get; set; }
+        [BsonElement("studentId")]
+        public string StudentId { get; set; }
         [BsonElement("class")]
         public string ClassName { get; set; }
 
