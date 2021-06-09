@@ -10,7 +10,7 @@ namespace WebLuanVan.Data.Entity
     {
         [BsonId]
         public ObjectId Id { get; set; }
-        [BsonElement("roleName")]
+        [BsonElement("name")]
         public string Name { get; set; }
     }
 }
