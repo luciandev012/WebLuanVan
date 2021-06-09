@@ -14,6 +14,7 @@ namespace WebLuanVan.BackendApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class UsersController : ControllerBase
     {
         private IMongoDatabase database;
