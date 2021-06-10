@@ -33,5 +33,7 @@ namespace WebLuanVan.Data.Entity
         public DateTime? CreatedAt { get; set; }
         [BsonElement("updatedAt")]
         public DateTime? UpdatedAt { get; set; }
+        [BsonElement("language")]
+        public string Language { get; set; }
     }
 }
