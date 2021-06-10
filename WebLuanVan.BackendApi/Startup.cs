@@ -1,3 +1,5 @@
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -14,6 +16,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WebLuanVan.Data.Services.Common;
+using WebLuanVan.Data.ViewModels.Request.Users;
 
 namespace WebLuanVan.BackendApi
 {
@@ -34,9 +37,14 @@ namespace WebLuanVan.BackendApi
                 var uri = s.GetRequiredService<IConfiguration>()["MongoUri"];
                 return new MongoClient(uri);
             });
-            services.AddTransient<IStorageService, StorageService>();
 
-            services.AddControllers();
+
+            services.AddTransient<IStorageService, StorageService>();
+            services.AddTransient<IValidator<LoginRequest>, LoginRequestValidator>();
+
+
+            services.AddControllers()
+                .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<LoginRequestValidator>(discoveredType => discoveredType.ValidatorType != typeof(LoginRequestValidator)));
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Swagger WebLuanVan Solution", Version = "v1" });

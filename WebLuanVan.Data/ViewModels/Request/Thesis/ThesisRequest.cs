@@ -24,5 +24,6 @@ namespace WebLuanVan.Data.ViewModels.Request.Thesis
         public IFormFile FileContent { get; set; }
         
         public string ThesisId { get; set; }
+        public string Language { get; set; }
     }
 }

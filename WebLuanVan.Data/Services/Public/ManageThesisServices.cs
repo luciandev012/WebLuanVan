@@ -35,6 +35,7 @@ namespace WebLuanVan.Data.Services.Public
                 Phase = request.Phase,
                 StudentId = request.StudentId,
                 Year = request.Year,
+                Language = request.Language
             };
             if(request.FileContent != null)
             {
@@ -85,6 +86,7 @@ namespace WebLuanVan.Data.Services.Public
             thesis.Phase = request.Phase;
             thesis.StudentId = request.StudentId;
             thesis.Year = request.Year;
+            thesis.Language = request.Language;
             var result = await _thesisCollection.ReplaceOneAsync(filter, thesis);
             return 1;
         }
