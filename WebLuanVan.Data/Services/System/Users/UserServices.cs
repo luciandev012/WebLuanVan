@@ -35,8 +35,9 @@ namespace WebLuanVan.Data.Services.System.Users
             }
             var claims = new[]
             {
-                new Claim(ClaimTypes.Name, account.FirstName),
+                new Claim(ClaimTypes.Name, account.FirstName + " " + account.LastName),
                 new Claim(ClaimTypes.Role, account.RoleId.ToString()),
+                //new Claim(ClaimTypes.)
             };
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Tokens:Key"]));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
