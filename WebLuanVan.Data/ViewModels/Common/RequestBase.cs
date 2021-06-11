@@ -4,9 +4,8 @@ using System.Text;
 
 namespace WebLuanVan.Data.ViewModels.Common
 {
-    public class PageViewModel : RequestBase
+    public class RequestBase
     {
-        public int PageIndex { get; set; }
-        public int PageSize { get; set; }
+        public string BearerToken { get; set; }
     }
 }

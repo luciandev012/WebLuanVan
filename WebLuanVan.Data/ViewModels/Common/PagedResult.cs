@@ -4,8 +4,9 @@ using System.Text;
 
 namespace WebLuanVan.Data.ViewModels.Common
 {
-    class PagingRequestBase
+    public class PagedResult<T>
     {
-
+        public List<T> Items { get; set; }
+        public int TotalRecord { get; set; }
     }
 }

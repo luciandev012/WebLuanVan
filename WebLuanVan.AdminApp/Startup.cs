@@ -33,6 +33,9 @@ namespace WebLuanVan.AdminApp
                     option.AccessDeniedPath = "/User/Forbidden";
                 });
             services.AddControllersWithViews();
+            services.AddSession(option => {
+                option.IdleTimeout = TimeSpan.FromMinutes(2);
+            });
             services.AddTransient<IUserApiClient, UserApiClient>();
         }
 
@@ -55,7 +58,7 @@ namespace WebLuanVan.AdminApp
             app.UseRouting();
 
             app.UseAuthorization();
-
+            app.UseSession();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(

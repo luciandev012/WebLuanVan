@@ -10,6 +10,8 @@ using System.Text;
 using System.Threading.Tasks;
 using WebLuanVan.Data.Entity;
 using WebLuanVan.Data.Services.Common;
+using WebLuanVan.Data.ViewModels.Common;
+using WebLuanVan.Data.ViewModels.ModelBinding;
 using WebLuanVan.Data.ViewModels.Request.Users;
 
 namespace WebLuanVan.Data.Services.System.Users
@@ -47,6 +49,34 @@ namespace WebLuanVan.Data.Services.System.Users
                 expires: DateTime.Now.AddHours(3),
                 signingCredentials: creds);
             return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+
+        public async Task<PagedResult<User>> GetUsersPaging(GetUserPagingRequest request)
+        {
+            var result = await _userCollection.Find(new BsonDocument()).ToListAsync();
+            if (!string.IsNullOrEmpty(request.Keyword))
+            {
+                result = await _userCollection.Find(x => x.FirstName.Contains(request.Keyword) || x.LastName.Contains(request.Keyword))
+                    .Skip((request.PageIndex - 1) * request.PageSize).Limit(request.PageSize).ToListAsync();
+   
+            }
+            List<User> listUser = new List<User>();
+            foreach(var item in result) //Binding user from collection account from database
+            {
+                User user = new User();
+                user.Username = item.Username;
+                user.LastName = item.LastName;
+                user.FirstName = item.FirstName;
+                user.Password = item.Password;
+                listUser.Add(user);
+            }
+            int totalRow = listUser.Count;
+            var pagedResult = new PagedResult<User>()
+            {
+                Items = listUser,
+                TotalRecord = totalRow
+            };
+            return pagedResult;
         }
 
         public async Task<bool> Register(RegisterRequest request)

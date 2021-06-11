@@ -37,6 +37,10 @@ namespace WebLuanVan.BackendApi.Controllers
             {
                 return BadRequest("Username or Password is incorrect!");
             }
+            //else
+            //{
+            //    HttpContext.Session.SetString("Token", resultToken);
+            //}
             return Ok(resultToken);
         }
         [HttpPost("register")]
@@ -53,6 +57,12 @@ namespace WebLuanVan.BackendApi.Controllers
                 return BadRequest("Register is unsuccesful!");
             }
             return Ok();
+        }
+         [HttpGet("paging")]
+        public async Task<IActionResult> GetAllUserPaging([FromQuery] GetUserPagingRequest request)
+        {
+            var users = await _userServices.GetUsersPaging(request);
+            return Ok(users);
         }
     }
 }
