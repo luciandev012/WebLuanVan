@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Logging;
@@ -25,9 +26,18 @@ namespace WebLuanVan.AdminApp.Controllers
             _userApiClient = userApiClient;
             _configuration = configuration;
         }
-        public IActionResult Index()
+        public async Task<IActionResult> Index(int pageIndex, int pageSize, string keyword)
         {
-            return View();
+            var session = HttpContext.Session.GetString("Token");
+            var request = new GetUserPagingRequest()
+            {
+                BearerToken = session,
+                Keyword = keyword,
+                PageIndex = pageIndex,
+                PageSize = pageSize
+            };
+            var data = await _userApiClient.GetUsersPaging(request);
+            return View(data);
         }
         [HttpGet]
         public async Task<IActionResult> Login()
@@ -46,7 +56,7 @@ namespace WebLuanVan.AdminApp.Controllers
             var userPrincipal = ValidationToken(token);
             var authProperties = new AuthenticationProperties()
             {
-                ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(10),
+                ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(20),
                 IsPersistent = true
             };
             await HttpContext.SignInAsync(
@@ -58,7 +68,7 @@ namespace WebLuanVan.AdminApp.Controllers
             {
                 return RedirectToAction("Forbidden", "User");
             }
-            
+            HttpContext.Session.SetString("Token", token);
             return RedirectToAction("Index", "Home");
         }
         [HttpPost]
