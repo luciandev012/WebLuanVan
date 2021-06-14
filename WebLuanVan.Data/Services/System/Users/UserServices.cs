@@ -35,6 +35,10 @@ namespace WebLuanVan.Data.Services.System.Users
             {
                 return null;
             }
+            if (!account.Status)
+            {
+                return "Account is not active!";
+            }
             var claims = new[]
             {
                 new Claim(ClaimTypes.Name, account.FirstName + " " + account.LastName),
@@ -46,7 +50,7 @@ namespace WebLuanVan.Data.Services.System.Users
             var token = new JwtSecurityToken(_config["Tokens:Issuer"],
                 _config["Tokens:Issuer"],
                 claims,
-                expires: DateTime.Now.AddHours(3),
+                expires: DateTime.Now.AddMinutes(30),
                 signingCredentials: creds);
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
@@ -87,7 +91,8 @@ namespace WebLuanVan.Data.Services.System.Users
                 LastName = request.LastName,
                 Password = HashPasswordMD5.CreateMD5(request.Password),
                 RoleId = await GetRoleId("User"),
-                Username = request.UserName
+                Username = request.UserName,
+                Status = false
             };
             await _userCollection.InsertOneAsync(account);
             return true;

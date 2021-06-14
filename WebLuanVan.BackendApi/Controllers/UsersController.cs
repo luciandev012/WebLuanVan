@@ -54,9 +54,9 @@ namespace WebLuanVan.BackendApi.Controllers
             var result = await _userServices.Register(request);
             if (!result)
             {
-                return BadRequest("Register is unsuccesful!");
+                return BadRequest("Register is unsuccessful!");
             }
-            return Ok();
+            return Ok("Register successful, please wait to activate your account!");
         }
          [HttpGet("paging")]
         public async Task<IActionResult> GetAllUserPaging([FromQuery] GetUserPagingRequest request)

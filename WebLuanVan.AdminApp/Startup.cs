@@ -34,7 +34,7 @@ namespace WebLuanVan.AdminApp
                 });
             services.AddControllersWithViews();
             services.AddSession(option => {
-                option.IdleTimeout = TimeSpan.FromMinutes(2);
+                option.IdleTimeout = TimeSpan.FromMinutes(30);
             });
             services.AddTransient<IUserApiClient, UserApiClient>();
         }
