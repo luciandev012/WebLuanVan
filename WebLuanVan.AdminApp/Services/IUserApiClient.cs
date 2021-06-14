@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 using WebLuanVan.Data.Entity;
 using WebLuanVan.Data.ViewModels.Common;
@@ -13,5 +14,6 @@ namespace WebLuanVan.AdminApp.Services
     {
         Task<string> Authenticate(LoginRequest request);
         Task<PagedResult<User>> GetUsersPaging(GetUserPagingRequest request);
+        Task<HttpResponseMessage> Register(RegisterRequest request);
     }
 }

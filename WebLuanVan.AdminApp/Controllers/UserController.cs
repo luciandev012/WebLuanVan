@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Logging;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
@@ -12,6 +13,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using WebLuanVan.AdminApp.Models;
 using WebLuanVan.AdminApp.Services;
 using WebLuanVan.Data.ViewModels.Request.Users;
 
@@ -26,7 +28,7 @@ namespace WebLuanVan.AdminApp.Controllers
             _userApiClient = userApiClient;
             _configuration = configuration;
         }
-        public async Task<IActionResult> Index(int pageIndex, int pageSize, string keyword)
+        public async Task<IActionResult> Index(string keyword, int pageIndex = 1, int pageSize = 10)
         {
             var session = HttpContext.Session.GetString("Token");
             var request = new GetUserPagingRequest()
@@ -56,7 +58,7 @@ namespace WebLuanVan.AdminApp.Controllers
             var userPrincipal = ValidationToken(token);
             var authProperties = new AuthenticationProperties()
             {
-                ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(20),
+                ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(30),
                 IsPersistent = true
             };
             await HttpContext.SignInAsync(
@@ -93,6 +95,28 @@ namespace WebLuanVan.AdminApp.Controllers
         public async Task<IActionResult> Forbidden()
         {
             return View();
+        }
+        [HttpGet]
+        public async Task<IActionResult> Create()
+        {
+            return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> Create(RegisterRequest request)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(ModelState);
+            }
+            var result = await _userApiClient.Register(request);
+            if (result.IsSuccessStatusCode)
+            {
+                return RedirectToAction("Index");
+            }
+            var message = await result.Content.ReadAsStringAsync();
+            //JsonObject
+            //ListError<Error> errors = JsonConvert.DeserializeObject<ListError<Error>>(message);
+            return View(request);
         }
     }
 }

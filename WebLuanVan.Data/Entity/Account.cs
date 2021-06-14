@@ -20,6 +20,8 @@ namespace WebLuanVan.Data.Entity
         public string FirstName { get; set; }
         [BsonElement("lastName")]
         public string LastName { get; set; }
+        [BsonElement("status")]
+        public bool Status { get; set; }
 
     }
 }
