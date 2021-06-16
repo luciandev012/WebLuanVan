@@ -27,7 +27,7 @@ namespace WebLuanVan.Data.Services.System.Users
             _config = config;
             _roleCollecton = database.GetCollection<Role>("role");
         }
-        public async Task<string> Authenticate(LoginRequest request)
+        public async Task<ApiResult<string>> Authenticate(LoginRequest request)
         {
             string hashPassword = HashPasswordMD5.CreateMD5(request.Password);
             var account = await _userCollection.Find(x => x.Username == request.UserName && x.Password == hashPassword).FirstOrDefaultAsync();
@@ -37,7 +37,7 @@ namespace WebLuanVan.Data.Services.System.Users
             }
             if (!account.Status)
             {
-                return "Account is not active!";
+                return new ApiErrorResult<string>("Account is not active!");
             }
             var claims = new[]
             {
@@ -52,10 +52,30 @@ namespace WebLuanVan.Data.Services.System.Users
                 claims,
                 expires: DateTime.Now.AddMinutes(30),
                 signingCredentials: creds);
-            return new JwtSecurityTokenHandler().WriteToken(token);
+            return new ApiSuccessResult<string>(new JwtSecurityTokenHandler().WriteToken(token));
         }
 
-        public async Task<PagedResult<User>> GetUsersPaging(GetUserPagingRequest request)
+        public async Task<ApiResult<User>> GetUserById(string id)
+        {
+            ObjectId objId = ObjectId.Parse(id);
+            var account = await _userCollection.Find(x => x.Id == objId).FirstOrDefaultAsync();
+            if (account == null)
+            {
+                return new ApiErrorResult<User>("Cannot find user!");
+            }
+            User user = new User()
+            {
+                Username = account.Username,
+                FirstName = account.FirstName,
+                LastName = account.LastName,
+                Status = account.Status,
+                Id = account.Id.ToString()
+                //Password = account.
+            };
+            return new ApiSuccessResult<User>(user);
+        }
+
+        public async Task<ApiResult<PagedResult<User>>> GetUsersPaging(GetUserPagingRequest request)
         {
             var result = await _userCollection.Find(new BsonDocument()).ToListAsync();
             if (!string.IsNullOrEmpty(request.Keyword))
@@ -72,6 +92,7 @@ namespace WebLuanVan.Data.Services.System.Users
                 user.LastName = item.LastName;
                 user.FirstName = item.FirstName;
                 user.Password = item.Password;
+                user.Id = item.Id.ToString();
                 listUser.Add(user);
             }
             int totalRow = listUser.Count;
@@ -80,11 +101,16 @@ namespace WebLuanVan.Data.Services.System.Users
                 Items = listUser,
                 TotalRecord = totalRow
             };
-            return pagedResult;
+            return new ApiSuccessResult<PagedResult<User>>(pagedResult);
         }
 
-        public async Task<bool> Register(RegisterRequest request)
+        public async Task<ApiResult<bool>> Register(RegisterRequest request)
         {
+            var checkExist = await _userCollection.CountDocumentsAsync(x => x.Username == request.UserName);
+            if(checkExist > 0)
+            {
+                return new ApiErrorResult<bool>("Username is Exist!"); 
+            }
             var account = new Account()
             {
                 FirstName = request.FirstName,
@@ -95,13 +121,39 @@ namespace WebLuanVan.Data.Services.System.Users
                 Status = false
             };
             await _userCollection.InsertOneAsync(account);
-            return true;
+            return new ApiSuccessResult<bool>();
         }
+
+        public async Task<ApiResult<bool>> Update(string id, UserUpdateRequest request)
+        {
+            ObjectId objId = ObjectId.Parse(id);
+            var user = await _userCollection.Find(x => x.Id == objId).FirstOrDefaultAsync();
+            if(user == null)
+            {
+                return new ApiErrorResult<bool>("Cannot find user!");
+            }
+            var filter = Builders<Account>.Filter.Eq("_id", objId);
+            user.FirstName = request.FirstName;
+            user.LastName = request.LastName;
+            var result = await _userCollection.ReplaceOneAsync(filter, user);
+            if(result.MatchedCount > 0)
+            {
+                return new ApiSuccessResult<bool>();
+            }
+            else
+            {
+                return new ApiErrorResult<bool>("Cannot update user!");
+            }
+            
+        }
+
         private async Task<ObjectId> GetRoleId(string roleName)
         {
             var role = await _roleCollecton.Find(x => x.Name == roleName).FirstOrDefaultAsync();
 
             return role.Id;
         }
+        
+        
     }
 }

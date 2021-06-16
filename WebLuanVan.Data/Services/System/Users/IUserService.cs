@@ -11,8 +11,10 @@ namespace WebLuanVan.Data.Services.System.Users
 {
     public interface IUserService
     {
-        Task<string> Authenticate(LoginRequest request);
-        Task<bool> Register(RegisterRequest request);
-        Task<PagedResult<User>> GetUsersPaging(GetUserPagingRequest request);
+        Task<ApiResult<string>> Authenticate(LoginRequest request);
+        Task<ApiResult<bool>> Register(RegisterRequest request);
+        Task<ApiResult<PagedResult<User>>> GetUsersPaging(GetUserPagingRequest request);
+        Task<ApiResult<bool>> Update(string username, UserUpdateRequest request);
+        Task<ApiResult<User>> GetUserById(string id);
     }
 }
