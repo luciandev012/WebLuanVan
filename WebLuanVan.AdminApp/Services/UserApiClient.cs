@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,9 +16,11 @@ namespace WebLuanVan.AdminApp.Services
     public class UserApiClient : IUserApiClient
     {
         private readonly IHttpClientFactory _httpClientFactory;
-        public UserApiClient(IHttpClientFactory httpClientFactory)
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        public UserApiClient(IHttpClientFactory httpClientFactory, IHttpContextAccessor httpContextAccessor)
         {
             _httpClientFactory = httpClientFactory;
+            _httpContextAccessor = httpContextAccessor;
         }
         public async Task<string> Authenticate(LoginRequest request)
         {
@@ -28,6 +31,22 @@ namespace WebLuanVan.AdminApp.Services
             var response = await client.PostAsync("/api/users/authenticate", httpContent);
             var token = await response.Content.ReadAsStringAsync();
             return token;
+        }
+
+        public async Task<ApiResult<User>> GetUserById(string id)
+        {
+            var client = _httpClientFactory.CreateClient();
+            var session = _httpContextAccessor.HttpContext.Session.GetString("Token");
+            client.BaseAddress = new Uri("https://localhost:5001");
+            client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", session);
+            var response = await client.GetAsync($"/api/users/{id}");
+            var body = await response.Content.ReadAsStringAsync();
+            if (response.IsSuccessStatusCode)
+            {
+                return JsonConvert.DeserializeObject<ApiSuccessResult<User>>(body);
+            }
+            //var users = JsonConvert.DeserializeObject<PagedResult<User>>(body);
+            return JsonConvert.DeserializeObject<ApiErrorResult<User>>(body);
         }
 
         public async Task<PagedResult<User>> GetUsersPaging(GetUserPagingRequest request)
@@ -51,6 +70,23 @@ namespace WebLuanVan.AdminApp.Services
             //var result = await response.Content.ReadAsStringAsync();
             //response.
             return response;
+        }
+
+        public async Task<ApiResult<bool>> Update(string id, UserUpdateRequest request)
+        {
+            var json = JsonConvert.SerializeObject(request);
+            var httpContent = new StringContent(json, Encoding.UTF8, "application/json");
+            var client = _httpClientFactory.CreateClient();
+            var session = _httpContextAccessor.HttpContext.Session.GetString("Token");
+            client.BaseAddress = new Uri("https://localhost:5001");
+            client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", session);
+            var response = await client.PutAsync($"/api/users/{id}", httpContent);
+            var result = await response.Content.ReadAsStringAsync();
+            if (response.IsSuccessStatusCode)
+            {
+                return JsonConvert.DeserializeObject<ApiSuccessResult<bool>>(result);
+            }
+            return JsonConvert.DeserializeObject<ApiErrorResult<bool>>(result);
         }
     }
 }

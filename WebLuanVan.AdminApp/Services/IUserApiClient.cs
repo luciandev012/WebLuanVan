@@ -15,5 +15,7 @@ namespace WebLuanVan.AdminApp.Services
         Task<string> Authenticate(LoginRequest request);
         Task<PagedResult<User>> GetUsersPaging(GetUserPagingRequest request);
         Task<HttpResponseMessage> Register(RegisterRequest request);
+        Task<ApiResult<bool>> Update(string id, UserUpdateRequest request);
+        Task<ApiResult<User>> GetUserById(string id);
     }
 }

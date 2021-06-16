@@ -80,7 +80,7 @@ namespace WebLuanVan.Data.Services.Public
             thesis.ThesisName = request.ThesisName;
             thesis.ThesisId = request.ThesisId;
             thesis.AcademicYear = request.AcademicYear;
-            thesis.CreatedAt = DateTime.Now;
+            //thesis.CreatedAt = DateTime.Now;
             thesis.FacultyId = request.FacultyId;
             thesis.LectureId = request.LectureId;
             thesis.Phase = request.Phase;

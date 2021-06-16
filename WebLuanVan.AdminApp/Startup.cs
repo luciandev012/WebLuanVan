@@ -1,6 +1,8 @@
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -10,6 +12,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using WebLuanVan.AdminApp.Services;
+using WebLuanVan.Data.ViewModels.Request.Users;
 
 namespace WebLuanVan.AdminApp
 {
@@ -32,7 +35,9 @@ namespace WebLuanVan.AdminApp
                     option.LoginPath = "/User/Login";
                     option.AccessDeniedPath = "/User/Forbidden";
                 });
-            services.AddControllersWithViews();
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddControllersWithViews()
+                     .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<LoginRequestValidator>());
             services.AddSession(option => {
                 option.IdleTimeout = TimeSpan.FromMinutes(30);
             });

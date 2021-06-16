@@ -15,6 +15,7 @@ using System.Text;
 using System.Threading.Tasks;
 using WebLuanVan.AdminApp.Models;
 using WebLuanVan.AdminApp.Services;
+using WebLuanVan.Data.ViewModels.ModelBinding;
 using WebLuanVan.Data.ViewModels.Request.Users;
 
 namespace WebLuanVan.AdminApp.Controllers
@@ -31,6 +32,10 @@ namespace WebLuanVan.AdminApp.Controllers
         public async Task<IActionResult> Index(string keyword, int pageIndex = 1, int pageSize = 10)
         {
             var session = HttpContext.Session.GetString("Token");
+            if(session == null)
+            {
+                return RedirectToAction("Login", "User");
+            }
             var request = new GetUserPagingRequest()
             {
                 BearerToken = session,
@@ -104,10 +109,10 @@ namespace WebLuanVan.AdminApp.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(RegisterRequest request)
         {
-            if (!ModelState.IsValid)
-            {
-                return View(ModelState);
-            }
+            //if (!ModelState.IsValid)
+            //{
+            //    return View(ModelState);
+            //}
             var result = await _userApiClient.Register(request);
             if (result.IsSuccessStatusCode)
             {
@@ -116,6 +121,28 @@ namespace WebLuanVan.AdminApp.Controllers
             var message = await result.Content.ReadAsStringAsync();
             //JsonObject
             //ListError<Error> errors = JsonConvert.DeserializeObject<ListError<Error>>(message);
+            return View(request);
+        }
+        [HttpGet]
+        public async Task<IActionResult> Edit(string id)
+        {
+            var result = await _userApiClient.GetUserById(id);
+            return View(result.ResultObj);
+        }
+        [HttpPost]
+        public async Task<IActionResult> Edit(User user)
+        {
+            UserUpdateRequest request = new UserUpdateRequest()
+            {
+                LastName = user.LastName,
+                FirstName = user.FirstName
+            };
+            var result = await _userApiClient.Update(user.Id, request);
+            if (result.IsSuccessed)
+            {
+                return RedirectToAction("Index");
+            }
+            ModelState.AddModelError("", result.Message);
             return View(request);
         }
     }

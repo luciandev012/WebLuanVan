@@ -26,14 +26,14 @@ namespace WebLuanVan.BackendApi.Controllers
         }
         [HttpPost("authenticate")]
         [AllowAnonymous]
-        public async Task<IActionResult> Authenticate([FromBody]LoginRequest request)
+        public async Task<IActionResult> Authenticate([FromBody] LoginRequest request)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
             var resultToken = await _userServices.Authenticate(request);
-            if (string.IsNullOrEmpty(resultToken))
+            if (resultToken == null)
             {
                 return BadRequest("Username or Password is incorrect!");
             }
@@ -41,7 +41,11 @@ namespace WebLuanVan.BackendApi.Controllers
             //{
             //    HttpContext.Session.SetString("Token", resultToken);
             //}
-            return Ok(resultToken);
+            if (!resultToken.IsSuccessed)
+            {
+                return BadRequest(resultToken.Message);
+            }
+            return Ok(resultToken.ResultObj);
         }
         [HttpPost("register")]
         [AllowAnonymous]
@@ -52,17 +56,37 @@ namespace WebLuanVan.BackendApi.Controllers
                 return BadRequest(ModelState);
             }
             var result = await _userServices.Register(request);
-            if (!result)
+            if (!result.IsSuccessed)
             {
                 return BadRequest("Register is unsuccessful!");
             }
             return Ok("Register successful, please wait to activate your account!");
         }
-         [HttpGet("paging")]
+        [HttpGet("paging")]
         public async Task<IActionResult> GetAllUserPaging([FromQuery] GetUserPagingRequest request)
         {
             var users = await _userServices.GetUsersPaging(request);
-            return Ok(users);
+            return Ok(users.ResultObj);
+        }
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update(string id, [FromBody]UserUpdateRequest request)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var result = await _userServices.Update(id, request);
+            if (!result.IsSuccessed)
+            {
+                return BadRequest(result.Message);
+            }
+            return Ok(result);
+        }
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetUserByUsername(string id)
+        {
+            var result = await _userServices.GetUserById(id);
+            return Ok(result);
         }
     }
 }
