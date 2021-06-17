@@ -29,7 +29,7 @@ namespace WebLuanVan.AdminApp.Controllers
             _userApiClient = userApiClient;
             _configuration = configuration;
         }
-        public async Task<IActionResult> Index(string keyword, int pageIndex = 1, int pageSize = 10)
+        public async Task<IActionResult> Index(string keyword, int pageIndex = 1, int pageSize = 1)
         {
             var session = HttpContext.Session.GetString("Token");
             if(session == null)
@@ -145,5 +145,6 @@ namespace WebLuanVan.AdminApp.Controllers
             ModelState.AddModelError("", result.Message);
             return View(request);
         }
+        
     }
 }
