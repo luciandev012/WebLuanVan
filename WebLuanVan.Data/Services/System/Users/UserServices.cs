@@ -77,13 +77,16 @@ namespace WebLuanVan.Data.Services.System.Users
 
         public async Task<ApiResult<PagedResult<User>>> GetUsersPaging(GetUserPagingRequest request)
         {
-            var result = await _userCollection.Find(new BsonDocument()).ToListAsync();
-            if (!string.IsNullOrEmpty(request.Keyword))
+            //var result = await _userCollection.Find(new BsonDocument()).ToListAsync();
+            if (string.IsNullOrEmpty(request.Keyword))
             {
-                result = await _userCollection.Find(x => x.FirstName.Contains(request.Keyword) || x.LastName.Contains(request.Keyword))
-                    .Skip((request.PageIndex - 1) * request.PageSize).Limit(request.PageSize).ToListAsync();
-   
+                request.Keyword = "";
             }
+            int totalRow = (int)await _userCollection.Find(x => x.FirstName.Contains(request.Keyword) || x.LastName.Contains(request.Keyword)).CountDocumentsAsync();
+            var result = await _userCollection.Find(x => x.FirstName.Contains(request.Keyword) || x.LastName.Contains(request.Keyword))
+                    .Skip((request.PageIndex - 1) * request.PageSize).Limit(request.PageSize).ToListAsync();
+
+            
             List<User> listUser = new List<User>();
             foreach(var item in result) //Binding user from collection account from database
             {
@@ -95,11 +98,13 @@ namespace WebLuanVan.Data.Services.System.Users
                 user.Id = item.Id.ToString();
                 listUser.Add(user);
             }
-            int totalRow = listUser.Count;
+            
             var pagedResult = new PagedResult<User>()
             {
                 Items = listUser,
-                TotalRecord = totalRow
+                TotalRecord = totalRow,
+                PageIndex = request.PageIndex,
+                PageSize = request.PageSize
             };
             return new ApiSuccessResult<PagedResult<User>>(pagedResult);
         }
