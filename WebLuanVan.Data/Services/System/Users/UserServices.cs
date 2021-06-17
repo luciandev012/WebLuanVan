@@ -55,6 +55,24 @@ namespace WebLuanVan.Data.Services.System.Users
             return new ApiSuccessResult<string>(new JwtSecurityTokenHandler().WriteToken(token));
         }
 
+        public async Task<bool> Delete(string id)
+        {
+            if (string.IsNullOrEmpty(id))
+            {
+                return false;
+            }
+            ObjectId objId = ObjectId.Parse(id);
+            var result = await _userCollection.DeleteOneAsync(x => x.Id == objId);
+            if(result.DeletedCount > 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
         public async Task<ApiResult<User>> GetUserById(string id)
         {
             ObjectId objId = ObjectId.Parse(id);

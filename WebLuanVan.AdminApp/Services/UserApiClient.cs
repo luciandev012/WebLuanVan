@@ -33,6 +33,20 @@ namespace WebLuanVan.AdminApp.Services
             return token;
         }
 
+        public async Task<bool> Delete(string id)
+        {
+            var client = _httpClientFactory.CreateClient();
+            var session = _httpContextAccessor.HttpContext.Session.GetString("Token");
+            client.BaseAddress = new Uri("https://localhost:5001");
+            client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", session);
+            var response = await client.DeleteAsync($"/api/users/{id}");
+            if (!response.IsSuccessStatusCode)
+            {
+                return false;
+            }
+            return true;
+        }
+
         public async Task<ApiResult<User>> GetUserById(string id)
         {
             var client = _httpClientFactory.CreateClient();

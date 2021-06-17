@@ -145,6 +145,27 @@ namespace WebLuanVan.AdminApp.Controllers
             ModelState.AddModelError("", result.Message);
             return View(request);
         }
-        
+        //[HttpDelete]
+        [HttpGet]
+        public async Task<IActionResult> Delete(string id)
+        {
+            var user = await _userApiClient.GetUserById(id);
+            return View(user.ResultObj);
+        }
+        [HttpPost]
+        public async Task<IActionResult> Delete(User user)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View();
+            }
+            var result = await _userApiClient.Delete(user.Id);
+            if (result)
+            {
+                return RedirectToAction("Index");
+            }
+            ModelState.AddModelError("", "Cannot delete user!");
+            return View(user);
+        }
     }
 }

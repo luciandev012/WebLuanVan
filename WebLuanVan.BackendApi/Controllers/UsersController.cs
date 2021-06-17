@@ -88,5 +88,15 @@ namespace WebLuanVan.BackendApi.Controllers
             var result = await _userServices.GetUserById(id);
             return Ok(result);
         }
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(string id)
+        {
+            var result = await _userServices.Delete(id);
+            if (!result)
+            {
+                return BadRequest("Cannot delete user!"); 
+            }
+            return Ok();
+        }
     }
 }

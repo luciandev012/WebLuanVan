@@ -17,5 +17,6 @@ namespace WebLuanVan.AdminApp.Services
         Task<HttpResponseMessage> Register(RegisterRequest request);
         Task<ApiResult<bool>> Update(string id, UserUpdateRequest request);
         Task<ApiResult<User>> GetUserById(string id);
+        Task<bool> Delete(string id);
     }
 }
