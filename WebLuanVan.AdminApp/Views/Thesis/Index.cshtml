@@ -1,0 +1,202 @@
+﻿@using WebLuanVan.Data.ViewModels.Common
+@model PagedResult<WebLuanVan.Data.ViewModels.Request.Thesis.ThesisRequest>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Scripts{
+    <script>
+    setTimeout(function () {
+        $("#msgAlert").fadeOut('slow');
+    }, 1000);
+    </script>
+}
+
+<!-- Header -->
+<div class="header bg-primary pb-6">
+    <div class="container-fluid">
+        <div class="header-body">
+            <div class="row align-items-center py-4">
+                <div class="col-lg-6 col-7">
+                    <h6 class="h2 text-white d-inline-block mb-0">Tables</h6>
+                    <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
+                        <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
+                            <li class="breadcrumb-item"><a href="/"><i class="fas fa-home"></i></a></li>
+                            <li class="breadcrumb-item"><a href="#">Table</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Danh sách luận văn</li>
+                        </ol>
+                    </nav>
+                </div>
+                <div class="col-lg-6 col-5 text-right">
+                    <a asp-action="Create" asp-controller="Thesis" class="btn btn-sm btn-neutral" id="btnNew">Tạo mới</a>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Page content -->
+<div class="container-fluid mt--6">
+    <div class="row">
+        <div class="col">
+            <div class="card">
+                <!-- Card header -->
+                <div class="card-header border-0">
+                    <h3 class="mb-0">Danh sách tài khoản</h3>
+                </div>
+                <!-- Search form -->
+                <form class="navbar-search navbar-search-light form-inline mr-sm-3" id="navbar-search-main">
+
+                    <div class="row">
+                        <div class="form-group mb-0">
+                            <div class="input-group input-group-alternative input-group-merge">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fas fa-search"></i></span>
+                                </div>
+                                <input class="form-control" placeholder="Search" value="@ViewBag.Keyword" type="text" name="keyword">
+                            </div>
+                        </div>
+                        <button type="button" class="close" data-action="search-close" data-target="#navbar-search-main" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <div class="row">
+                        <a asp-action="Index" asp-controller="User" class="btn btn-sm btn-neutral" id="btnNew">Danh sách đầy đủ</a>
+                    </div>
+
+
+                </form>
+                <!-- Light table -->
+                <div class="table-responsive">
+                    @if (ViewBag.Message != null)
+                    {
+                        <div id="msgAlert" class="alert alert-success" role="alert">
+                            @ViewBag.Message
+                        </div>
+                    }
+                    <table class="table align-items-center table-flush">
+                        <thead class="thead-light">
+                            <tr>
+                                <th>
+                                    Tên
+                                </th>
+
+                                <th>
+                                    Mã sinh viên
+                                </th>
+                                <th>
+                                    Năm
+                                </th>
+                                <th>
+                                    Đợt
+                                </th>
+                                <th>
+                                    Khoá
+                                </th>
+                                <th>
+                                    Giảng viên hướng dẫn
+                                </th>
+                                <th>
+                                    Giảng viên phản biện
+                                </th>
+                                <th>
+                                    Khoa
+                                </th>
+                                <th>
+                                    Mã luận văn
+                                </th>
+                                <th>
+                                    Thời gian bảo vệ
+                                </th>
+                                <th>
+                                    Thời gian thực hiện
+                                </th>
+                                <th>
+                                    Thời gian kết thúc
+                                </th>
+                                <th>
+                                    Điểm
+                                </th>
+                                <th>
+                                    Trạng thái
+                                </th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody class="list">
+                            @foreach (var item in Model.Items)
+                            {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.ThesisName)
+                                </td>
+
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.StudentId)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Year)
+                                </td>
+                                <td style="padding-left:3rem">
+                                    @Html.DisplayFor(modelItem => item.Phase)
+                                </td>
+                                <td style="padding-left:3rem">
+                                    @Html.DisplayFor(modelItem => item.AcademicYear)
+                                </td>
+                                <td style="padding-left:3rem">
+                                    "
+                                    @Html.DisplayFor(modelItem => item.GuideLectureId)
+                                </td>
+                                <td style="padding-left:3rem">
+                                    @Html.DisplayFor(modelItem => item.DebateLectureId)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.FacultyId)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.ThesisId)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.ProtectedAt)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.MakedAt)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.FinishedAt)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Score)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.IsProtected)
+                                </td>
+                                <td>
+                                    <a href="/User/Edit/@item.Id" class="btn btn-sm btn-neutral" id="btnNew">Sửa</a>
+                                    <a href="/User/Delete/@item.Id" class="btn btn-sm btn-neutral" id="btnNew">Xoá</a>
+                                    @if (item.IsProtected)
+                                    {
+                                        <a href="/User/Status/@item.Id" class="btn btn-sm btn-neutral" id="btnNew">Huỷ</a>
+                                    }
+                                    else
+                                    {
+                                        <a href="/User/Status/@item.Id" class="btn btn-sm btn-neutral" id="btnNew">Kích hoạt</a>
+                                    }
+
+
+                                </td>
+                            </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <!-- Card footer -->
+
+                @await Component.InvokeAsync("Paging", Model)
+            </div>
+        </div>
+    </div>
+</div>

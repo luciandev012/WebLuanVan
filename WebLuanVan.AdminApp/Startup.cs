@@ -42,6 +42,7 @@ namespace WebLuanVan.AdminApp
                 option.IdleTimeout = TimeSpan.FromMinutes(30);
             });
             services.AddTransient<IUserApiClient, UserApiClient>();
+            services.AddTransient<IThesisApiClient, ThesisApiClient>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

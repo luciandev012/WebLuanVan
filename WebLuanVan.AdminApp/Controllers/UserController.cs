@@ -29,7 +29,7 @@ namespace WebLuanVan.AdminApp.Controllers
             _userApiClient = userApiClient;
             _configuration = configuration;
         }
-        public async Task<IActionResult> Index(string keyword, int pageIndex = 1, int pageSize = 1)
+        public async Task<IActionResult> Index(string keyword, int pageIndex = 1, int pageSize = 10)
         {
             var session = HttpContext.Session.GetString("Token");
             if(session == null)
@@ -44,6 +44,8 @@ namespace WebLuanVan.AdminApp.Controllers
                 PageSize = pageSize
             };
             var data = await _userApiClient.GetUsersPaging(request);
+            ViewBag.Keyword = keyword;
+            ViewBag.Message = TempData["result"];
             return View(data);
         }
         [HttpGet]
@@ -60,7 +62,12 @@ namespace WebLuanVan.AdminApp.Controllers
                 return View(ModelState);
             }
             var token = await _userApiClient.Authenticate(request);
-            var userPrincipal = ValidationToken(token);
+            if (!token.IsSuccessed)
+            {
+                ModelState.AddModelError("", token.Message);
+                return View();
+            }
+            var userPrincipal = ValidationToken(token.ResultObj);
             var authProperties = new AuthenticationProperties()
             {
                 ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(30),
@@ -75,7 +82,7 @@ namespace WebLuanVan.AdminApp.Controllers
             {
                 return RedirectToAction("Forbidden", "User");
             }
-            HttpContext.Session.SetString("Token", token);
+            HttpContext.Session.SetString("Token", token.ResultObj);
             return RedirectToAction("Index", "Home");
         }
         [HttpPost]
@@ -116,6 +123,7 @@ namespace WebLuanVan.AdminApp.Controllers
             var result = await _userApiClient.Register(request);
             if (result.IsSuccessStatusCode)
             {
+                TempData["result"] = "Thành công";
                 return RedirectToAction("Index");
             }
             var message = await result.Content.ReadAsStringAsync();
@@ -140,6 +148,7 @@ namespace WebLuanVan.AdminApp.Controllers
             var result = await _userApiClient.Update(user.Id, request);
             if (result.IsSuccessed)
             {
+                TempData["result"] = "Thành công";
                 return RedirectToAction("Index");
             }
             ModelState.AddModelError("", result.Message);
@@ -162,10 +171,17 @@ namespace WebLuanVan.AdminApp.Controllers
             var result = await _userApiClient.Delete(user.Id);
             if (result)
             {
+                TempData["result"] = "Thành công";
                 return RedirectToAction("Index");
             }
             ModelState.AddModelError("", "Cannot delete user!");
             return View(user);
+        }
+        [HttpGet]
+        public async Task<IActionResult> Status(string id)
+        {
+            var result = await _userApiClient.Status(id);
+            return RedirectToAction("Index");
         }
     }
 }

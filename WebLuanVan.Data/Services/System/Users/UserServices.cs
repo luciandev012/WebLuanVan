@@ -20,12 +20,18 @@ namespace WebLuanVan.Data.Services.System.Users
     {
         private readonly IMongoCollection<Account> _userCollection;
         private readonly IConfiguration _config;
-        private readonly IMongoCollection<Role> _roleCollecton;
+        private readonly IMongoCollection<Role> _roleCollection;
         public UserServices(IMongoDatabase database, IConfiguration config)
         {
             _userCollection = database.GetCollection<Account>("account");
             _config = config;
-            _roleCollecton = database.GetCollection<Role>("role");
+            _roleCollection = database.GetCollection<Role>("role");
+            
+        }
+        public async Task CreateIndexAsync()
+        {
+            var indexKeysDefinition = Builders<Account>.IndexKeys.Ascending(account => account.Username);
+            await _userCollection.Indexes.CreateOneAsync(new CreateIndexModel<Account>(indexKeysDefinition));
         }
         public async Task<ApiResult<string>> Authenticate(LoginRequest request)
         {
@@ -33,7 +39,7 @@ namespace WebLuanVan.Data.Services.System.Users
             var account = await _userCollection.Find(x => x.Username == request.UserName && x.Password == hashPassword).FirstOrDefaultAsync();
             if(account == null)
             {
-                return null;
+                return new ApiErrorResult<string>("Username or password is incorrect!");
             }
             if (!account.Status)
             {
@@ -100,8 +106,8 @@ namespace WebLuanVan.Data.Services.System.Users
             {
                 request.Keyword = "";
             }
-            int totalRow = (int)await _userCollection.Find(x => x.FirstName.Contains(request.Keyword) || x.LastName.Contains(request.Keyword)).CountDocumentsAsync();
-            var result = await _userCollection.Find(x => x.FirstName.Contains(request.Keyword) || x.LastName.Contains(request.Keyword))
+            int totalRow = (int)await _userCollection.Find(x => x.FirstName.ToLower().Contains(request.Keyword) || x.LastName.ToLower().Contains(request.Keyword)).CountDocumentsAsync();
+            var result = await _userCollection.Find(x => x.FirstName.ToLower().Contains(request.Keyword) || x.LastName.ToLower().Contains(request.Keyword))
                     .Skip((request.PageIndex - 1) * request.PageSize).Limit(request.PageSize).ToListAsync();
 
             
@@ -114,6 +120,7 @@ namespace WebLuanVan.Data.Services.System.Users
                 user.FirstName = item.FirstName;
                 user.Password = item.Password;
                 user.Id = item.Id.ToString();
+                user.Status = item.Status;
                 listUser.Add(user);
             }
             
@@ -129,6 +136,7 @@ namespace WebLuanVan.Data.Services.System.Users
 
         public async Task<ApiResult<bool>> Register(RegisterRequest request)
         {
+            await CreateIndexAsync();
             var checkExist = await _userCollection.CountDocumentsAsync(x => x.Username == request.UserName);
             if(checkExist > 0)
             {
@@ -172,11 +180,24 @@ namespace WebLuanVan.Data.Services.System.Users
 
         private async Task<ObjectId> GetRoleId(string roleName)
         {
-            var role = await _roleCollecton.Find(x => x.Name == roleName).FirstOrDefaultAsync();
+            var role = await _roleCollection.Find(x => x.Name == roleName).FirstOrDefaultAsync();
 
             return role.Id;
         }
-        
-        
+
+        public async Task<bool> ChangeStatus(string id)
+        {
+            ObjectId objId = ObjectId.Parse(id);
+            var user = await _userCollection.Find(x => x.Id == objId).FirstOrDefaultAsync();
+            if (user == null)
+            {
+                return false;
+            }
+            bool status = user.Status ? false : true;
+            var filter = Builders<Account>.Filter.Eq("_id", objId);
+            var update = Builders<Account>.Update.Set("status", status);
+            var result = await _userCollection.UpdateOneAsync(filter, update);
+            return result.ModifiedCount > 0;
+        }
     }
 }
