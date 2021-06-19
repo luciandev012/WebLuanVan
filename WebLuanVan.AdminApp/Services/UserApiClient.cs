@@ -22,7 +22,7 @@ namespace WebLuanVan.AdminApp.Services
             _httpClientFactory = httpClientFactory;
             _httpContextAccessor = httpContextAccessor;
         }
-        public async Task<string> Authenticate(LoginRequest request)
+        public async Task<ApiResult<string>> Authenticate(LoginRequest request)
         {
             var json = JsonConvert.SerializeObject(request);
             var httpContent = new StringContent(json, Encoding.UTF8, "application/json");
@@ -30,7 +30,26 @@ namespace WebLuanVan.AdminApp.Services
             client.BaseAddress = new Uri("https://localhost:5001");
             var response = await client.PostAsync("/api/users/authenticate", httpContent);
             var token = await response.Content.ReadAsStringAsync();
-            return token;
+            if (response.IsSuccessStatusCode)
+            {
+                
+                return new ApiSuccessResult<string>(token);
+            }
+            return new ApiErrorResult<string>(token);
+        }
+
+        public async Task<bool> Delete(string id)
+        {
+            var client = _httpClientFactory.CreateClient();
+            var session = _httpContextAccessor.HttpContext.Session.GetString("Token");
+            client.BaseAddress = new Uri("https://localhost:5001");
+            client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", session);
+            var response = await client.DeleteAsync($"/api/users/{id}");
+            if (!response.IsSuccessStatusCode)
+            {
+                return false;
+            }
+            return true;
         }
 
         public async Task<ApiResult<User>> GetUserById(string id)
@@ -70,6 +89,19 @@ namespace WebLuanVan.AdminApp.Services
             //var result = await response.Content.ReadAsStringAsync();
             //response.
             return response;
+        }
+
+        public async Task<bool> Status(string id)
+        {
+            var json = JsonConvert.SerializeObject("");
+            var httpContent = new StringContent(json, Encoding.UTF8, "application/json");
+            var client = _httpClientFactory.CreateClient();
+            var session = _httpContextAccessor.HttpContext.Session.GetString("Token");
+            client.BaseAddress = new Uri("https://localhost:5001");
+            client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", session);
+            var response = await client.PutAsync($"/api/users/{id}/status", httpContent);
+           //ar result = await response.Content.ReadAsStringAsync();
+            return response.IsSuccessStatusCode;
         }
 
         public async Task<ApiResult<bool>> Update(string id, UserUpdateRequest request)

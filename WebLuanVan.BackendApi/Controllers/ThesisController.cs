@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using WebLuanVan.Data.Entity;
 using WebLuanVan.Data.Services.Common;
 using WebLuanVan.Data.Services.Public;
+using WebLuanVan.Data.ViewModels.Request;
 using WebLuanVan.Data.ViewModels.Request.Thesis;
 
 namespace WebLuanVan.BackendApi.Controllers
@@ -24,50 +25,51 @@ namespace WebLuanVan.BackendApi.Controllers
             database = GetDatabase.Get(client);
             _manageThesisServices = new ManageThesisServices(database, storageService);
         }
-        
+
         [HttpGet]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> GetThesisPaging([FromQuery] ThesisPagingRequest request)
         {
-            var thesis = await _manageThesisServices.Get();
-            return Ok(thesis);
+            var thesis = await _manageThesisServices.Get(request);
+            return Ok(thesis.ResultObj);
         }
-        [HttpGet("/{thesisId}")]
-        public async Task<IActionResult> Get(string thesisId)
+        [HttpGet("/{id}")]
+        public async Task<IActionResult> Get(string id)
         {
-            var thesis = await _manageThesisServices.GetThesisById(thesisId);
+            var thesis = await _manageThesisServices.GetThesisById(id);
             return Ok(thesis);
         }
         [HttpPost()]
-        public async Task<IActionResult> Post([FromForm]ThesisRequest thesis)
+        [Consumes("multipart/form-data")]
+        public async Task<IActionResult> Post([FromForm] ThesisRequest thesis)
         {
             var result = await _manageThesisServices.Create(thesis);
-            if(result == 0)
+            if (result == 0)
             {
                 return BadRequest("Thesis not created");
             }
-            var value = await _manageThesisServices.GetThesisById(thesis.ThesisId);
-            return Ok(value);
+            //var value = await _manageThesisServices.GetThesisById(thesis.Id);
+            return Ok();
         }
         [HttpPut()]
         public async Task<IActionResult> Put([FromForm] ThesisRequest thesis)
         {
             var result = await _manageThesisServices.Update(thesis);
-            if(result == 0)
+            if (result == 0)
             {
                 return BadRequest("Thesis not updated");
             }
-            var value = await _manageThesisServices.GetThesisById(thesis.ThesisId);
-            return Ok(value);
+            //var value = await _manageThesisServices.GetThesisById(thesis.ThesisId);
+            return Ok();
         }
-        [HttpDelete("/{thesisId}")]
-        public async Task<IActionResult> Delete(string thesisId)
+        [HttpDelete("/{id}")]
+        public async Task<IActionResult> Delete(string id)
         {
-            var result = await _manageThesisServices.Delete(thesisId);
+            var result = await _manageThesisServices.Delete(id);
             if (result == 0)
             {
                 return BadRequest("Thesis not deleted");
             }
-            
+
             return Ok();
         }
     }

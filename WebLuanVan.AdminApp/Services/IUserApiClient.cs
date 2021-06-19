@@ -12,10 +12,12 @@ namespace WebLuanVan.AdminApp.Services
 {
     public interface IUserApiClient
     {
-        Task<string> Authenticate(LoginRequest request);
+        Task<ApiResult<string>> Authenticate(LoginRequest request);
         Task<PagedResult<User>> GetUsersPaging(GetUserPagingRequest request);
         Task<HttpResponseMessage> Register(RegisterRequest request);
         Task<ApiResult<bool>> Update(string id, UserUpdateRequest request);
         Task<ApiResult<User>> GetUserById(string id);
+        Task<bool> Delete(string id);
+        Task<bool> Status(string id);
     }
 }

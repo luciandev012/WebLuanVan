@@ -1,6 +1,7 @@
 ﻿using MongoDB.Bson;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace WebLuanVan.Data.ViewModels.ModelBinding
@@ -15,6 +16,7 @@ namespace WebLuanVan.Data.ViewModels.ModelBinding
         public string FirstName { get; set; }
         
         public string LastName { get; set; }
+        [UIHint("IsActive")]
         public bool Status { get; set; }
     }
 }

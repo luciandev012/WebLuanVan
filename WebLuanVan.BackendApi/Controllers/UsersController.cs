@@ -23,6 +23,7 @@ namespace WebLuanVan.BackendApi.Controllers
         {
             database = GetDatabase.Get(client);
             _userServices = new UserServices(database, config);
+            //_userServices.CreateIndexAsync();
         }
         [HttpPost("authenticate")]
         [AllowAnonymous]
@@ -33,14 +34,8 @@ namespace WebLuanVan.BackendApi.Controllers
                 return BadRequest(ModelState);
             }
             var resultToken = await _userServices.Authenticate(request);
-            if (resultToken == null)
-            {
-                return BadRequest("Username or Password is incorrect!");
-            }
-            //else
-            //{
-            //    HttpContext.Session.SetString("Token", resultToken);
-            //}
+            
+            
             if (!resultToken.IsSuccessed)
             {
                 return BadRequest(resultToken.Message);
@@ -87,6 +82,26 @@ namespace WebLuanVan.BackendApi.Controllers
         {
             var result = await _userServices.GetUserById(id);
             return Ok(result);
+        }
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(string id)
+        {
+            var result = await _userServices.Delete(id);
+            if (!result)
+            {
+                return BadRequest("Cannot delete user!"); 
+            }
+            return Ok();
+        }
+        [HttpPut("{id}/status")]
+        public async Task<IActionResult> Status(string id)
+        {
+            var result = await _userServices.ChangeStatus(id);
+            if (!result)
+            {
+                return BadRequest("Something went wrong!");
+            }
+            return Ok();
         }
     }
 }

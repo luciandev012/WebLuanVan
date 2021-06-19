@@ -9,6 +9,8 @@ using System.Text;
 using System.Threading.Tasks;
 using WebLuanVan.Data.Entity;
 using WebLuanVan.Data.Services.Common;
+using WebLuanVan.Data.ViewModels.Common;
+using WebLuanVan.Data.ViewModels.ModelBinding;
 using WebLuanVan.Data.ViewModels.Request.Thesis;
 
 namespace WebLuanVan.Data.Services.Public
@@ -29,13 +31,18 @@ namespace WebLuanVan.Data.Services.Public
                 ThesisName = request.ThesisName,
                 ThesisId = request.ThesisId,
                 AcademicYear = request.AcademicYear,
-                CreatedAt = DateTime.Now,
+                MakedAt = request.MakedAt,
                 FacultyId = request.FacultyId,
-                LectureId = request.LectureId,
+                GuideLectureId = request.GuideLectureId,
+                DebateLectureId = request.DebateLectureId,
                 Phase = request.Phase,
                 StudentId = request.StudentId,
                 Year = request.Year,
-                Language = request.Language
+                Language = request.Language,
+                FinishedAt = request.FinishedAt,
+                IsProtected = request.IsProtected,
+                ProtectedAt = request.ProtectedAt,
+                Score = request.Score
             };
             if(request.FileContent != null)
             {
@@ -46,23 +53,76 @@ namespace WebLuanVan.Data.Services.Public
             return 1;
         }
 
-        public async Task<int> Delete(string thesisId)
+        public async Task<int> Delete(string id)
         {
-            var filter = Builders<Thesis>.Filter.Eq("thesisId", thesisId);
+            ObjectId objId = ObjectId.Parse(id);
+            var filter = Builders<Thesis>.Filter.Eq("thesisId", objId);
+            Thesis thesis = await GetThesisById(id);
+            await _storageService.DeleteFileAsynce(thesis.Content);
             await _thesisCollection.DeleteOneAsync(filter);
+
             return 1;
         }
 
-        public async Task<List<Thesis>> Get()
+        public async Task<ApiResult<PagedResult<ThesisViewModel>>> Get(ThesisPagingRequest request)
         {
-            var thesis = await _thesisCollection.FindSync(_ => true).ToListAsync();
-            return thesis;
+            if(request.Field == null)
+            {
+                request.Field = "thesisName";
+            }
+            if (string.IsNullOrEmpty(request.Keyword))
+            {
+                request.Keyword = "";
+            }
+            //var filter = Builders<Thesis>.Filter.Eq(x => x.ThesisName.ToLower().Contains(request.Keyword));
+            int totalRow = (int)await _thesisCollection.Find(x => x.ThesisName.ToLower().Contains(request.Keyword)).CountDocumentsAsync();
+            var result = await _thesisCollection.Find(x => x.ThesisName.ToLower().Contains(request.Keyword))
+                    .Skip((request.PageIndex - 1) * request.PageSize).Limit(request.PageSize).ToListAsync();
+
+            List<ThesisViewModel> listThesis = new List<ThesisViewModel>();
+            foreach (var item in result) //Binding thesis from collection account from database
+            {
+                ThesisViewModel thesis = new ThesisViewModel() 
+                {
+                    ThesisName = item.ThesisName,
+                    ThesisId = item.ThesisId,
+                    Id = item.Id.ToString(),
+                    AcademicYear = item.AcademicYear,
+                    DebateLectureId = item.DebateLectureId,
+                    FacultyId = item.FacultyId,
+                    FinishedAt = item.FinishedAt,
+                    GuideLectureId = item.GuideLectureId,
+                    IsProtected = item.IsProtected,
+                    Language = item.Language,
+                    Content = item.Content,
+                    MakedAt = item.MakedAt,
+                    Phase = item.Phase,
+                    Score = (int)item.Score,
+                    ProtectedAt = item.ProtectedAt,
+                    StudentId = item.StudentId,
+                    Year = item.Year
+                };
+
+                listThesis.Add(thesis);
+            }
+
+            var pagedResult = new PagedResult<ThesisViewModel>
+            {
+                Items = listThesis,
+                PageIndex = request.PageIndex,
+                PageSize = request.PageSize,
+                TotalRecord = totalRow
+            };
+            return new ApiSuccessResult<PagedResult<ThesisViewModel>>(pagedResult);
         }
 
-        public async Task<Thesis> GetThesisById(string thesisId)
+       
+
+        public async Task<Thesis> GetThesisById(string id)
         {
-            var thesis = await _thesisCollection.Find(x => x.ThesisId == thesisId).FirstOrDefaultAsync();
-            return (Thesis)thesis;
+            ObjectId objId = ObjectId.Parse(id);
+            var thesis = await _thesisCollection.Find(x => x.Id == objId).FirstOrDefaultAsync();
+            return thesis;
         }
 
         public async Task<int> Update(ThesisRequest request)
@@ -73,22 +133,27 @@ namespace WebLuanVan.Data.Services.Public
                 throw new Exception($"Cannot find thesis with id{request.ThesisId}");
             }
             var filter = Builders<Thesis>.Filter.Eq("thesisId", request.ThesisId);
-            //var json = new JavaScriptSerializer().Serialize(request);
-            //request.Id = thesis.Id;
-            //var update = request.ToBsonDocument();
-            thesis.UpdatedAt = DateTime.Now;
+            
             thesis.ThesisName = request.ThesisName;
             thesis.ThesisId = request.ThesisId;
             thesis.AcademicYear = request.AcademicYear;
-            //thesis.CreatedAt = DateTime.Now;
             thesis.FacultyId = request.FacultyId;
-            thesis.LectureId = request.LectureId;
+            thesis.GuideLectureId = request.GuideLectureId;
             thesis.Phase = request.Phase;
             thesis.StudentId = request.StudentId;
             thesis.Year = request.Year;
             thesis.Language = request.Language;
+            thesis.DebateLectureId = request.DebateLectureId;
+            thesis.Score = request.Score;
+            thesis.Content = await SaveFile(request.FileContent);
+            thesis.FinishedAt = request.FinishedAt;
+            thesis.MakedAt = request.MakedAt;
+            thesis.ProtectedAt = request.ProtectedAt;
+            thesis.IsProtected = request.IsProtected;
+
+
             var result = await _thesisCollection.ReplaceOneAsync(filter, thesis);
-            return 1;
+            return  (int)result.ModifiedCount;
         }
 
         private async Task<string> SaveFile(IFormFile file)

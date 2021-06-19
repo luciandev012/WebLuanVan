@@ -16,5 +16,8 @@ namespace WebLuanVan.Data.Services.System.Users
         Task<ApiResult<PagedResult<User>>> GetUsersPaging(GetUserPagingRequest request);
         Task<ApiResult<bool>> Update(string username, UserUpdateRequest request);
         Task<ApiResult<User>> GetUserById(string id);
+        Task<bool> Delete(string id);
+        Task CreateIndexAsync();
+        Task<bool> ChangeStatus(string id);
     }
 }
