@@ -9,7 +9,6 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using WebLuanVan.Data.Entity;
-using WebLuanVan.Data.Services.Common;
 using WebLuanVan.Data.ViewModels.Common;
 using WebLuanVan.Data.ViewModels.ModelBinding;
 using WebLuanVan.Data.ViewModels.Request.Users;
@@ -35,7 +34,7 @@ namespace WebLuanVan.Data.Services.System.Users
         }
         public async Task<ApiResult<string>> Authenticate(LoginRequest request)
         {
-            string hashPassword = HashPasswordMD5.CreateMD5(request.Password);
+            string hashPassword = Common.Common.CreateMD5(request.Password);
             var account = await _userCollection.Find(x => x.Username == request.UserName && x.Password == hashPassword).FirstOrDefaultAsync();
             if(account == null)
             {
@@ -146,7 +145,7 @@ namespace WebLuanVan.Data.Services.System.Users
             {
                 FirstName = request.FirstName,
                 LastName = request.LastName,
-                Password = HashPasswordMD5.CreateMD5(request.Password),
+                Password = Common.Common.CreateMD5(request.Password),
                 RoleId = await GetRoleId("User"),
                 Username = request.UserName,
                 Status = false

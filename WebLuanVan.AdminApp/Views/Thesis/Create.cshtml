@@ -38,7 +38,7 @@
                     <h3 class="mb-0">Thêm mới Luận văn</h3>
                 </div>
                 <!-- Create User -->
-                <form asp-action="Create">
+                <form asp-action="Create" enctype="multipart/form-data" method="post">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                     <div class="form-group">
                         <label asp-for="ThesisName" class="control-label"></label>
@@ -71,6 +71,11 @@
                         <span asp-validation-for="GuideLectureId" class="text-danger"></span>
                     </div>
                     <div class="form-group">
+                        <label asp-for="DebateLectureId" class="control-label"></label>
+                        <input asp-for="DebateLectureId" class="form-control" />
+                        <span asp-validation-for="DebateLectureId" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
                         <label asp-for="FacultyId" class="control-label"></label>
                         <input asp-for="FacultyId" class="form-control" />
                         <span asp-validation-for="FacultyId" class="text-danger"></span>
@@ -84,6 +89,11 @@
                         <label asp-for="Language" class="control-label"></label>
                         <input asp-for="Language" class="form-control" />
                         <span asp-validation-for="Language" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="FileContent" class="control-label"></label>
+                        <input asp-for="FileContent" type="file" class="form-control" />
+                        <span asp-validation-for="FileContent" class="text-danger"></span>
                     </div>
                     <div class="form-group">
                         <label asp-for="ProtectedAt" class="control-label"></label>

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace WebLuanVan.Data.ViewModels.ModelBinding
@@ -19,7 +20,8 @@ namespace WebLuanVan.Data.ViewModels.ModelBinding
         public int AcademicYear { get; set; }
 
         public string GuideLectureId { get; set; }
-        public List<string> DebateLectureId { get; set; }
+        [UIHint("DebateLecture")]
+        public string[] DebateLectureId { get; set; }
 
         public string FacultyId { get; set; }
 
@@ -31,6 +33,7 @@ namespace WebLuanVan.Data.ViewModels.ModelBinding
         public DateTime? MakedAt { get; set; }
         public DateTime? FinishedAt { get; set; }
         public int Score { get; set; }
+        [UIHint("IsActive")]
         public bool IsProtected { get; set; }
     }
 }

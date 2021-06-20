@@ -11,7 +11,7 @@ namespace WebLuanVan.AdminApp.Services
 {
     public interface IThesisApiClient
     {
-        Task<PagedResult<ThesisRequest>> GetThesisPaging(ThesisPagingRequest request);
+        Task<PagedResult<ThesisViewModel>> GetThesisPaging(ThesisPagingRequest request);
         Task<bool> Create(ThesisRequest request);
     }
 }
