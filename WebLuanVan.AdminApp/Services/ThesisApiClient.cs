@@ -41,7 +41,7 @@ namespace WebLuanVan.AdminApp.Services
                 requestContent.Add(bytes, "fileContent", request.FileContent.FileName);
             }
             requestContent.Add(new StringContent(request.ThesisName), "thesisName");
-            requestContent.Add(new StringContent(request.StudentId), "thesisName");
+            requestContent.Add(new StringContent(request.StudentId), "studentId");
             requestContent.Add(new StringContent(request.Year.ToString()), "year");
             requestContent.Add(new StringContent(request.Phase.ToString()), "phase");
             requestContent.Add(new StringContent(request.AcademicYear.ToString()), "academicYear");
@@ -52,14 +52,14 @@ namespace WebLuanVan.AdminApp.Services
             requestContent.Add(new StringContent(request.Language), "language");
             requestContent.Add(new StringContent(request.ProtectedAt.ToString()), "protectedAt");
             requestContent.Add(new StringContent(request.MakedAt.ToString()), "makedAt");
-            requestContent.Add(new StringContent(request.FinishedAt.ToString()), "finishAt");
+            requestContent.Add(new StringContent(request.FinishedAt.ToString()), "finishedAt");
             requestContent.Add(new StringContent(request.Score.ToString()), "score");
             requestContent.Add(new StringContent(request.IsProtected.ToString()), "isProtected");
             var response = await client.PostAsync($"/api/thesis/", requestContent);
             return response.IsSuccessStatusCode;
         }
 
-        public async Task<PagedResult<ThesisRequest>> GetThesisPaging(ThesisPagingRequest request)
+        public async Task<PagedResult<ThesisViewModel>> GetThesisPaging(ThesisPagingRequest request)
         {
             var client = _httpClientFactory.CreateClient();
             var session = _httpContextAccessor.HttpContext.Session.GetString("Token");
@@ -67,7 +67,7 @@ namespace WebLuanVan.AdminApp.Services
             client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", session);
             var response = await client.GetAsync($"/api/thesis?pageIndex={request.PageIndex}&pageSize={request.PageSize}&keyword={request.Keyword}&field={request.Field}");
             var body = await response.Content.ReadAsStringAsync();
-            var users = JsonConvert.DeserializeObject<PagedResult<ThesisRequest>>(body);
+            var users = JsonConvert.DeserializeObject<PagedResult<ThesisViewModel>>(body);
             return users;
         }
     }

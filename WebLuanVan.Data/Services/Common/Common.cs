@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Security.Cryptography;
+using System.Text.RegularExpressions;
+
 namespace WebLuanVan.Data.Services.Common
 {
-    public class HashPasswordMD5
+    public class Common
     {
         public static string CreateMD5(string input)
         {
@@ -22,6 +24,14 @@ namespace WebLuanVan.Data.Services.Common
                 }
                 return sb.ToString();
             }
+        }
+        public static string ConvertToUnSign(string s)
+        {
+            Regex regex = new Regex("\\p{IsCombiningDiacriticalMarks}+");
+            string temp = s.Normalize(NormalizationForm.FormD);
+            string unsign = regex.Replace(temp, String.Empty).Replace('\u0111', 'd').Replace('\u0110', 'D').ToLower();
+            string slug = unsign.Replace(' ', '-');
+            return slug;
         }
     }
 }

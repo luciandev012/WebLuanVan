@@ -20,7 +20,7 @@ namespace WebLuanVan.Data.ViewModels.Request.Thesis
         public int AcademicYear { get; set; }
         
         public string GuideLectureId { get; set; }
-        public List<string> DebateLectureId { get; set; }
+        public string DebateLectureId { get; set; }
 
         public string FacultyId { get; set; }
         

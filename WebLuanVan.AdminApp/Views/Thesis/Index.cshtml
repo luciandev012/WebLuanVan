@@ -1,5 +1,5 @@
 ﻿@using WebLuanVan.Data.ViewModels.Common
-@model PagedResult<WebLuanVan.Data.ViewModels.Request.Thesis.ThesisRequest>
+@model PagedResult<WebLuanVan.Data.ViewModels.ModelBinding.ThesisViewModel>
 
 @{
     ViewData["Title"] = "Index";
@@ -147,7 +147,7 @@
                                     @Html.DisplayFor(modelItem => item.AcademicYear)
                                 </td>
                                 <td style="padding-left:3rem">
-                                    "
+                                    
                                     @Html.DisplayFor(modelItem => item.GuideLectureId)
                                 </td>
                                 <td style="padding-left:3rem">

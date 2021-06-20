@@ -45,6 +45,7 @@ namespace WebLuanVan.AdminApp.Controllers
             return View();
         }
         [HttpPost]
+        [Consumes("multipart/form-data")]
         public async Task<IActionResult> Create([FromForm] ThesisRequest request)
         {
             var result = await _thesisApiClient.Create(request);

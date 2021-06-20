@@ -26,6 +26,8 @@ namespace WebLuanVan.Data.Services.Public
         }
         public async Task<int> Create(ThesisRequest request)
         {
+            var arrDebateLecture = request.DebateLectureId.Trim().Split(',');
+
             var thesis = new Thesis()
             {
                 ThesisName = request.ThesisName,
@@ -34,7 +36,7 @@ namespace WebLuanVan.Data.Services.Public
                 MakedAt = request.MakedAt,
                 FacultyId = request.FacultyId,
                 GuideLectureId = request.GuideLectureId,
-                DebateLectureId = request.DebateLectureId,
+                DebateLectureId = arrDebateLecture,
                 Phase = request.Phase,
                 StudentId = request.StudentId,
                 Year = request.Year,
@@ -133,7 +135,7 @@ namespace WebLuanVan.Data.Services.Public
                 throw new Exception($"Cannot find thesis with id{request.ThesisId}");
             }
             var filter = Builders<Thesis>.Filter.Eq("thesisId", request.ThesisId);
-            
+            var arrDebateLecture = request.DebateLectureId.Trim().Split(',');
             thesis.ThesisName = request.ThesisName;
             thesis.ThesisId = request.ThesisId;
             thesis.AcademicYear = request.AcademicYear;
@@ -143,7 +145,7 @@ namespace WebLuanVan.Data.Services.Public
             thesis.StudentId = request.StudentId;
             thesis.Year = request.Year;
             thesis.Language = request.Language;
-            thesis.DebateLectureId = request.DebateLectureId;
+            thesis.DebateLectureId = arrDebateLecture;
             thesis.Score = request.Score;
             thesis.Content = await SaveFile(request.FileContent);
             thesis.FinishedAt = request.FinishedAt;
@@ -159,9 +161,10 @@ namespace WebLuanVan.Data.Services.Public
         private async Task<string> SaveFile(IFormFile file)
         {
             var originalFileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
-            var fileName = $"{Guid.NewGuid()}{Path.GetExtension(originalFileName)}";
+            var fileName = $"{Common.Common.ConvertToUnSign(originalFileName)}";
             await _storageService.SaveFileAsync(file.OpenReadStream(), fileName);
             return fileName;
         }
+        
     }
 }

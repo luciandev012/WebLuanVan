@@ -24,7 +24,7 @@ namespace WebLuanVan.Data.Entity
         [BsonElement("guideLectureId")]
         public string GuideLectureId { get; set; }
         [BsonElement("debateLectureId")]
-        public List<string> DebateLectureId { get; set; }
+        public string[] DebateLectureId { get; set; }
         [BsonElement("facultyId")]
         public string FacultyId { get; set; }
         [BsonElement("content")]
