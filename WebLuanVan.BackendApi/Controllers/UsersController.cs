@@ -78,7 +78,7 @@ namespace WebLuanVan.BackendApi.Controllers
             return Ok(result);
         }
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetUserByUsername(string id)
+        public async Task<IActionResult> GetUserById(string id)
         {
             var result = await _userServices.GetUserById(id);
             return Ok(result);

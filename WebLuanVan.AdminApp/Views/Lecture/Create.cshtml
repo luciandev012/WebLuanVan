@@ -1,4 +1,4 @@
-﻿@model WebLuanVan.Data.ViewModels.Request.Users.RegisterRequest
+﻿@model WebLuanVan.Data.ViewModels.ModelBinding.LectureViewModel
 
 @{
     ViewData["Title"] = "Create";
@@ -18,12 +18,12 @@
                         <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
                             <li class="breadcrumb-item"><a href="/"><i class="fas fa-home"></i></a></li>
                             <li class="breadcrumb-item"><a href="#">Table</a></li>
-                            <li class="breadcrumb-item active" aria-current="page">Users</li>
+                            <li class="breadcrumb-item active" aria-current="page">Giảng viên</li>
                         </ol>
                     </nav>
                 </div>
                 <div class="col-lg-6 col-5 text-right">
-                    <a asp-action="Index" asp-controller="User" class="btn btn-sm btn-neutral">Index</a>
+                    <a asp-action="Index" asp-controller="Lecture" class="btn btn-sm btn-neutral">Danh sách</a>
                     <a href="#" class="btn btn-sm btn-neutral">Filters</a>
                 </div>
             </div>
@@ -37,35 +37,31 @@
             <div class="card">
                 <!-- Card header -->
                 <div class="card-header border-0">
-                    <h3 class="mb-0">User table</h3>
+                    <h3 class="mb-0">Bảng giảng viên</h3>
                 </div>
-                <!-- Create User -->
-                <form asp-action="Create" class="input-form">
+                <!-- Create Lecture -->
+                <form asp-action="Create">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    
                     <div class="form-group">
-                        <label asp-for="FirstName" class="control-label"></label>
-                        <input asp-for="FirstName" class="form-control" />
-                        <span asp-validation-for="FirstName" class="text-danger"></span>
+                        <label asp-for="LectureId" class="control-label"></label>
+                        <input asp-for="LectureId" class="form-control" />
+                        <span asp-validation-for="LectureId" class="text-danger"></span>
                     </div>
                     <div class="form-group">
-                        <label asp-for="LastName" class="control-label"></label>
-                        <input asp-for="LastName" class="form-control" />
-                        <span asp-validation-for="LastName" class="text-danger"></span>
+                        <label asp-for="LectureName" class="control-label"></label>
+                        <input asp-for="LectureName" class="form-control" />
+                        <span asp-validation-for="LectureName" class="text-danger"></span>
                     </div>
                     <div class="form-group">
-                        <label asp-for="UserName" class="control-label"></label>
-                        <input asp-for="UserName" class="form-control" />
-                        <span asp-validation-for="UserName" class="text-danger"></span>
+                        <label asp-for="LectureRole" class="control-label"></label>
+                        <input asp-for="LectureRole" class="form-control" />
+                        <span asp-validation-for="LectureRole" class="text-danger"></span>
                     </div>
                     <div class="form-group">
-                        <label asp-for="Password" class="control-label"></label>
-                        <input asp-for="Password" class="form-control" />
-                        <span asp-validation-for="Password" class="text-danger"></span>
-                    </div>
-                    <div class="form-group">
-                        <label asp-for="ConfirmPassword" class="control-label"></label>
-                        <input asp-for="ConfirmPassword" class="form-control" />
-                        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                        <label asp-for="Email" class="control-label"></label>
+                        <input asp-for="Email" class="form-control" />
+                        <span asp-validation-for="Email" class="text-danger"></span>
                     </div>
                     <div class="form-group">
                         <input type="submit" value="Thêm mới" class="btn btn-primary" />

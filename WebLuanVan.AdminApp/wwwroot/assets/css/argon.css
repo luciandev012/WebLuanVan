@@ -1,4 +1,4 @@
-@charset 'UTF-8';
+﻿@charset 'UTF-8';
 /*!
 
 =========================================================
@@ -23750,7 +23750,7 @@ textarea[resize='horizontal']
 .table td,
 .table th
 {
-    font-size: .8125rem;
+    font-size: 1rem;
 
     white-space: nowrap;
 }

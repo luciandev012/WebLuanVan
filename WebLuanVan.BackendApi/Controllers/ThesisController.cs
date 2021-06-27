@@ -32,7 +32,7 @@ namespace WebLuanVan.BackendApi.Controllers
             var thesis = await _manageThesisServices.Get(request);
             return Ok(thesis.ResultObj);
         }
-        [HttpGet("/{id}")]
+        [HttpGet("{id}")]
         public async Task<IActionResult> Get(string id)
         {
             var thesis = await _manageThesisServices.GetThesisById(id);
@@ -51,6 +51,7 @@ namespace WebLuanVan.BackendApi.Controllers
             return Ok();
         }
         [HttpPut()]
+        [Consumes("multipart/form-data")]
         public async Task<IActionResult> Put([FromForm] ThesisRequest thesis)
         {
             var result = await _manageThesisServices.Update(thesis);
@@ -61,7 +62,7 @@ namespace WebLuanVan.BackendApi.Controllers
             //var value = await _manageThesisServices.GetThesisById(thesis.ThesisId);
             return Ok();
         }
-        [HttpDelete("/{id}")]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(string id)
         {
             var result = await _manageThesisServices.Delete(id);
@@ -70,6 +71,16 @@ namespace WebLuanVan.BackendApi.Controllers
                 return BadRequest("Thesis not deleted");
             }
 
+            return Ok();
+        }
+        [HttpPut("{id}/status")]
+        public async Task<IActionResult> Status(string id)
+        {
+            var result = await _manageThesisServices.ChangeThesisStatus(id);
+            if (!result)
+            {
+                return BadRequest("Something went wrong!");
+            }
             return Ok();
         }
     }

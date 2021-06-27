@@ -58,27 +58,39 @@ namespace WebLuanVan.Data.Services.Public
         public async Task<int> Delete(string id)
         {
             ObjectId objId = ObjectId.Parse(id);
-            var filter = Builders<Thesis>.Filter.Eq("thesisId", objId);
-            Thesis thesis = await GetThesisById(id);
-            await _storageService.DeleteFileAsynce(thesis.Content);
-            await _thesisCollection.DeleteOneAsync(filter);
+            var filter = Builders<Thesis>.Filter.Eq("_id", objId);
+            var thesis = await GetThesisById(id);
+            await _storageService.DeleteFileAsync(thesis.Content);
+            var result = await _thesisCollection.DeleteOneAsync(filter);
 
-            return 1;
+            return (int)result.DeletedCount;
         }
 
         public async Task<ApiResult<PagedResult<ThesisViewModel>>> Get(ThesisPagingRequest request)
         {
-            if(request.Field == null)
-            {
-                request.Field = "thesisName";
-            }
+            //if(request.Field == null)
+            //{
+            //    request.Field = "thesisName";
+            //}
             if (string.IsNullOrEmpty(request.Keyword))
             {
                 request.Keyword = "";
             }
+            if (request.PageIndex == 0)
+            {
+                request.PageIndex = 1;
+            }
+            if (request.PageSize == 0)
+            {
+                request.PageSize = 5;
+            }
+            if (string.IsNullOrEmpty(request.LanguageId))
+            {
+                request.LanguageId = "";
+            }
             //var filter = Builders<Thesis>.Filter.Eq(x => x.ThesisName.ToLower().Contains(request.Keyword));
-            int totalRow = (int)await _thesisCollection.Find(x => x.ThesisName.ToLower().Contains(request.Keyword)).CountDocumentsAsync();
-            var result = await _thesisCollection.Find(x => x.ThesisName.ToLower().Contains(request.Keyword))
+            int totalRow = (int)await _thesisCollection.Find(x => x.ThesisName.ToLower().Contains(request.Keyword) && x.Language.Contains(request.LanguageId)).CountDocumentsAsync();
+            var result = await _thesisCollection.Find(x => x.ThesisName.ToLower().Contains(request.Keyword) && x.Language.Contains(request.LanguageId))
                     .Skip((request.PageIndex - 1) * request.PageSize).Limit(request.PageSize).ToListAsync();
 
             List<ThesisViewModel> listThesis = new List<ThesisViewModel>();
@@ -120,21 +132,43 @@ namespace WebLuanVan.Data.Services.Public
 
        
 
-        public async Task<Thesis> GetThesisById(string id)
+        public async Task<ThesisViewModel> GetThesisById(string id)
         {
             ObjectId objId = ObjectId.Parse(id);
-            var thesis = await _thesisCollection.Find(x => x.Id == objId).FirstOrDefaultAsync();
-            return thesis;
+            var item = await _thesisCollection.Find(x => x.Id == objId).FirstOrDefaultAsync();
+            var result = new ThesisViewModel()
+            {
+                ThesisName = item.ThesisName,
+                ThesisId = item.ThesisId,
+                Id = item.Id.ToString(),
+                AcademicYear = item.AcademicYear,
+                DebateLectureId = item.DebateLectureId,
+                FacultyId = item.FacultyId,
+                FinishedAt = item.FinishedAt,
+                GuideLectureId = item.GuideLectureId,
+                IsProtected = item.IsProtected,
+                Language = item.Language,
+                Content = item.Content,
+                MakedAt = item.MakedAt,
+                Phase = item.Phase,
+                Score = (int)item.Score,
+                ProtectedAt = item.ProtectedAt,
+                StudentId = item.StudentId,
+                Year = item.Year
+            };
+            return result;
         }
 
         public async Task<int> Update(ThesisRequest request)
         {
-            var thesis = await GetThesisById(request.ThesisId);
+            ObjectId objId = ObjectId.Parse(request.Id);
+            var thesis = await _thesisCollection.Find(x => x.Id == objId).FirstOrDefaultAsync();
             if(thesis == null)
             {
-                throw new Exception($"Cannot find thesis with id{request.ThesisId}");
+                throw new Exception($"Cannot find thesis with id{objId.ToString()}");
             }
-            var filter = Builders<Thesis>.Filter.Eq("thesisId", request.ThesisId);
+            var filter = Builders<Thesis>.Filter.Eq("Id", objId);
+            await _storageService.DeleteFileAsync(thesis.Content);
             var arrDebateLecture = request.DebateLectureId.Trim().Split(',');
             thesis.ThesisName = request.ThesisName;
             thesis.ThesisId = request.ThesisId;
@@ -151,10 +185,8 @@ namespace WebLuanVan.Data.Services.Public
             thesis.FinishedAt = request.FinishedAt;
             thesis.MakedAt = request.MakedAt;
             thesis.ProtectedAt = request.ProtectedAt;
-            thesis.IsProtected = request.IsProtected;
-
-
             var result = await _thesisCollection.ReplaceOneAsync(filter, thesis);
+
             return  (int)result.ModifiedCount;
         }
 
@@ -165,6 +197,19 @@ namespace WebLuanVan.Data.Services.Public
             await _storageService.SaveFileAsync(file.OpenReadStream(), fileName);
             return fileName;
         }
-        
+        public async Task<bool> ChangeThesisStatus(string id)
+        {
+            ObjectId objId = ObjectId.Parse(id);
+            var thesis = await _thesisCollection.Find(x => x.Id == objId).FirstOrDefaultAsync();
+            if (thesis == null)
+            {
+                return false;
+            }
+            bool status = thesis.IsProtected ? false : true;
+            var filter = Builders<Thesis>.Filter.Eq("_id", objId);
+            var update = Builders<Thesis>.Update.Set("isProtected", status);
+            var result = await _thesisCollection.UpdateOneAsync(filter, update);
+            return result.ModifiedCount > 0;
+        }
     }
 }
