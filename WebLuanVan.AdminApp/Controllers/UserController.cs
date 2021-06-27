@@ -127,8 +127,7 @@ namespace WebLuanVan.AdminApp.Controllers
                 return RedirectToAction("Index");
             }
             var message = await result.Content.ReadAsStringAsync();
-            //JsonObject
-            //ListError<Error> errors = JsonConvert.DeserializeObject<ListError<Error>>(message);
+            
             return View(request);
         }
         [HttpGet]
@@ -180,7 +179,7 @@ namespace WebLuanVan.AdminApp.Controllers
         [HttpGet]
         public async Task<IActionResult> Status(string id)
         {
-            var result = await _userApiClient.Status(id);
+            await _userApiClient.Status(id);
             return RedirectToAction("Index");
         }
     }

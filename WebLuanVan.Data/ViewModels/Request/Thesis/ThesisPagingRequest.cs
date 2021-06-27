@@ -8,6 +8,6 @@ namespace WebLuanVan.Data.ViewModels.Request.Thesis
     public class ThesisPagingRequest : PageViewModel
     {
         public string Keyword { get; set; }
-        public string Field { get; set; }
+        public string LanguageId { get; set; }
     }
 }

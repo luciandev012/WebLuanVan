@@ -1,9 +1,10 @@
-﻿@model WebLuanVan.Data.ViewModels.ModelBinding.User
+﻿@model WebLuanVan.Data.ViewModels.ModelBinding.ThesisViewModel
 
 @{
     ViewData["Title"] = "Delete";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+
 
 <!-- Header -->
 <div class="header bg-primary pb-6">
@@ -16,12 +17,12 @@
                         <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
                             <li class="breadcrumb-item"><a href="/"><i class="fas fa-home"></i></a></li>
                             <li class="breadcrumb-item"><a href="#">Table</a></li>
-                            <li class="breadcrumb-item active" aria-current="page">Users</li>
+                            <li class="breadcrumb-item active" aria-current="page">Luận văn</li>
                         </ol>
                     </nav>
                 </div>
                 <div class="col-lg-6 col-5 text-right">
-                    <a asp-action="Index" asp-controller="User" class="btn btn-sm btn-neutral">Index</a>
+                    <a asp-action="Index" asp-controller="Thesis" class="btn btn-sm btn-neutral">Danh sách luận văn</a>
                     <a href="#" class="btn btn-sm btn-neutral">Filters</a>
                 </div>
             </div>
@@ -38,37 +39,29 @@
                     <h3 class="mb-0">Table users</h3>
                 </div>
                 <div class="row" style="padding:1.5rem">
-                    
+
                     <div class="col-md-6">
                         <dl class="row">
-                            <h6>Are you want to delete this user?</h6>
+                            <h6>Bạn có muốn xoá luận văn không?</h6>
                             <hr />
-                            
+
                         </dl>
-                        <div class="row">
-                            <dt class="col-sm-2">
-                                @Html.DisplayNameFor(model => model.Id)
+                        <dl class="row">
+
+                            <dt class="col-sm-4">
+                                @Html.DisplayNameFor(model => model.ThesisName)
                             </dt>
-                            <dd class="col-sm-10">
-                                @Html.DisplayFor(model => model.Id)
-                            </dd>
-                            <dt class="col-sm-2">
-                                @Html.DisplayNameFor(model => model.Username)
-                            </dt>
-                            <dd class="col-sm-10">
-                                @Html.DisplayFor(model => model.Username)
+                            <dd class="col-sm-8">
+                                @Html.DisplayFor(model => model.ThesisName)
                             </dd>
 
-                        </div>
-                    </div>
+                        </dl>
 
-                    <div class="row">
                         <form asp-action="Delete">
-                            <input type="submit" value="Delete" class="btn btn-danger" /> 
-                            
+                            <input type="submit" value="Xoá" class="btn btn-danger" /> |
+
                         </form>
                     </div>
-                </div>
             </div>
         </div>
     </div>

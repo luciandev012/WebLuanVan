@@ -9,6 +9,7 @@ namespace WebLuanVan.Data.ViewModels.ModelBinding
     {
 
         public string Id { get; set; }
+        [Display(Name = "Tên luận văn")]
         public string ThesisName { get; set; }
 
         public string StudentId { get; set; }

@@ -18,5 +18,6 @@ namespace WebLuanVan.Data.Entity
         public string LectureRole { get; set; }
         [BsonElement("email")]
         public string Email { get; set; }
+
     }
 }

@@ -1,18 +1,19 @@
 ﻿@using WebLuanVan.Data.ViewModels.Common
-@model PagedResult<WebLuanVan.Data.ViewModels.ModelBinding.User>
+@model PagedResult<WebLuanVan.Data.ViewModels.ModelBinding.LectureViewModel>
 
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-@section Scripts{ 
-<script>
-    setTimeout(function () {
-        $("#msgAlert").fadeOut('slow');
-    }, 1000);
-</script>
+@section Scripts{
+    <script>
+        setTimeout(function () {
+            $("#msgAlert").fadeOut('slow');
+        }, 1000);
+    </script>
 }
+
 
 <!-- Header -->
 <div class="header bg-primary pb-6">
@@ -24,13 +25,13 @@
                     <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
                         <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
                             <li class="breadcrumb-item"><a href="/"><i class="fas fa-home"></i></a></li>
-                            <li class="breadcrumb-item"><a href="#">Tài khoản</a></li>
-                            <li class="breadcrumb-item active" aria-current="page">Tài khoản</li>
+                            <li class="breadcrumb-item"><a href="#">Giảng viên</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Giảng viên</li>
                         </ol>
                     </nav>
                 </div>
                 <div class="col-lg-6 col-5 text-right">
-                    <a asp-action="Create" asp-controller="User" class="btn btn-sm btn-neutral" id="btnNew">Tạo mới</a>
+                    <a asp-action="Create" asp-controller="Lecture" class="btn btn-sm btn-neutral" id="btnNew">Tạo mới</a>
 
                 </div>
             </div>
@@ -51,13 +52,13 @@
                             <h3 class="mb-0">Danh sách tài khoản</h3>
                         </div>
                         <div class="col-md-6">
-                            <a asp-action="Index" asp-controller="User" class="btn btn-sm btn-neutral" id="btnNew">Danh sách đầy đủ</a>
+                            <a asp-action="Index" asp-controller="Lecture" class="btn btn-sm btn-neutral" id="btnNew">Danh sách đầy đủ</a>
                         </div>
                     </div>
                 </div>
                 <!-- Search form -->
                 <form class="navbar-search navbar-search-light form-inline mr-sm-3" id="navbar-search-main">
-                    
+
                     <div class="row">
                         <div class="form-group mb-0">
                             <div class="input-group input-group-alternative input-group-merge">
@@ -71,13 +72,13 @@
                             <span aria-hidden="true">×</span>
                         </button>
                     </div>
-                    
-                    
-                    
+
+
+
                 </form>
                 <!-- Light table -->
                 <div class="table-responsive">
-                    @if(ViewBag.Message != null)
+                    @if (ViewBag.Message != null)
                     {
                         <div id="msgAlert" class="alert alert-success" role="alert">
                             @ViewBag.Message
@@ -86,18 +87,19 @@
                     <table class="table align-items-center table-flush">
                         <thead class="thead-light">
                             <tr>
+
+
                                 <th>
-                                    Tên đăng nhập
-                                </th>
-                                
-                                <th>
-                                    Tên
+                                    Tên giảng viên
                                 </th>
                                 <th>
-                                    Họ
+                                    Mã giảng viên
                                 </th>
                                 <th>
-                                    Trạng thái
+                                    Chức vụ
+                                </th>
+                                <th>
+                                    Email
                                 </th>
                                 <th></th>
                             </tr>
@@ -107,32 +109,21 @@
                             {
                                 <tr>
                                     <td>
-                                        @Html.DisplayFor(modelItem => item.Username)
-                                    </td>
-                                    
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.FirstName)
+                                        @Html.DisplayFor(modelItem => item.LectureName)
                                     </td>
                                     <td>
-                                        @Html.DisplayFor(modelItem => item.LastName)
+                                        @Html.DisplayFor(modelItem => item.LectureId)
                                     </td>
-                                    <td style="padding-left:3rem">
-                                        
-                                        @Html.DisplayFor(modelItem => item.Status)
-                                    </td>
-                                    <td>
-                                        <a href="/User/Edit/@item.Id" class="btn btn-sm btn-neutral" id="btnNew">Sửa</a>
-                                        <a href="/User/Delete/@item.Id" class="btn btn-sm btn-neutral" id="btnNew">Xoá</a>
-                                        @if (item.Status)
-                                        {
-                                            <a href="/User/Status/@item.Id" class="btn btn-sm btn-neutral" id="btnNew">Huỷ</a>
-                                        }
-                                        else
-                                        {
-                                            <a href="/User/Status/@item.Id" class="btn btn-sm btn-neutral" id="btnNew">Kích hoạt</a>
-                                        }
 
-
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.LectureRole)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Email)
+                                    </td>
+                                    <td>
+                                        <a href="/Lecture/Edit/@item.Id" class="btn btn-sm btn-neutral" id="btnNew">Sửa</a> 
+                                        <a href="/Lecture/Delete/@item.Id" class="btn btn-sm btn-neutral" id="btnNew">Xoá</a>
                                     </td>
                                 </tr>
                             }

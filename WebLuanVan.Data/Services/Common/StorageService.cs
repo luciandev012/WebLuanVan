@@ -16,7 +16,7 @@ namespace WebLuanVan.Data.Services.Common
         {
             _userContentFolder = Path.Combine(webHostEnviroment.WebRootPath, USER_CONTENT_FOLDER_NAME);
         }
-        public async Task DeleteFileAsynce(string fileName)
+        public async Task DeleteFileAsync(string fileName)
         {
             var filePath = Path.Combine(_userContentFolder, fileName);
             if (File.Exists(filePath))

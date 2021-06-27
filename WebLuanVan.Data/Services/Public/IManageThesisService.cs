@@ -13,8 +13,9 @@ namespace WebLuanVan.Data.Services.Public
     {
         Task<int> Create(ThesisRequest request);
         Task<int> Update(ThesisRequest request);
-        Task<int> Delete(string thesisId);
+        Task<int> Delete(string id);
         Task<ApiResult<PagedResult<ThesisViewModel>>> Get(ThesisPagingRequest request);
-        Task<Thesis> GetThesisById(string thesisId);
+        Task<ThesisViewModel> GetThesisById(string id);
+        Task<bool> ChangeThesisStatus(string id);
     }
 }

@@ -1,10 +1,23 @@
 ﻿@model WebLuanVan.Data.ViewModels.Request.Thesis.ThesisRequest
-
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Edit";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+@section Scripts{
+    <script>
+        function visibleElement() {
+            var ele = document.getElementsByName("date");
+            for (var i = 0; i < ele.length; i++) {
+                if (ele[i].style.display == 'none') {
+                    ele[i].style.display = 'block';
+                } else {
+                    ele[i].style.visibility = 'none';
+                }
+            }
+        }
+    </script>
+ }
 <!-- Header -->
 <div class="header bg-primary pb-6">
     <div class="container-fluid">
@@ -35,96 +48,102 @@
             <div class="card">
                 <!-- Card header -->
                 <div class="card-header border-0">
-                    <h3 class="mb-0">Thêm mới Luận văn</h3>
+                    <h3 class="mb-0">Chi tiết và sửa luận văn</h3>
                 </div>
                 <!-- Create User -->
-                <form asp-action="Create" enctype="multipart/form-data" method="post" class="input-form">
+                <form asp-action="Edit" enctype="multipart/form-data" method="post" class="input-form">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    @*<div class="form-group">
+                        <label class="control-label">Tên luận văn</label>
+                        <input asp-for="Id" class="form-control"/>
+                        <span asp-validation-for="Id" class="text-danger"></span>
+                    </div>*@
                     <div class="form-group">
-                        <label asp-for="ThesisName" class="control-label"></label>
+                        <label class="control-label">Tên luận văn</label>
                         <input asp-for="ThesisName" class="form-control" />
                         <span asp-validation-for="ThesisName" class="text-danger"></span>
                     </div>
                     <div class="form-group">
-                        <label asp-for="StudentId" class="control-label"></label>
+                        <label class="control-label">Mã sinh viên</label>
                         <input asp-for="StudentId" class="form-control" />
                         <span asp-validation-for="StudentId" class="text-danger"></span>
                     </div>
                     <div class="form-group">
-                        <label asp-for="Year" class="control-label"></label>
+                        <label class="control-label">Năm</label>
                         <input asp-for="Year" class="form-control" />
                         <span asp-validation-for="Year" class="text-danger"></span>
                     </div>
                     <div class="form-group">
-                        <label asp-for="Phase" class="control-label"></label>
+                        <label class="control-label">Đợt</label>
                         <input asp-for="Phase" class="form-control" />
                         <span asp-validation-for="Phase" class="text-danger"></span>
                     </div>
                     <div class="form-group">
-                        <label asp-for="AcademicYear" class="control-label"></label>
+                        <label class="control-label">Khoá</label>
                         <input asp-for="AcademicYear" class="form-control" />
                         <span asp-validation-for="AcademicYear" class="text-danger"></span>
                     </div>
                     <div class="form-group">
-                        <label asp-for="GuideLectureId" class="control-label"></label>
+                        <label class="control-label">Giản viên hướng dẫn</label>
                         <input asp-for="GuideLectureId" class="form-control" />
                         <span asp-validation-for="GuideLectureId" class="text-danger"></span>
                     </div>
                     <div class="form-group">
-                        <label asp-for="DebateLectureId" class="control-label"></label>
+                        <label class="control-label">Giảng viên phản biện</label>
                         <input asp-for="DebateLectureId" class="form-control" />
                         <span asp-validation-for="DebateLectureId" class="text-danger"></span>
                     </div>
                     <div class="form-group">
-                        <label asp-for="FacultyId" class="control-label"></label>
+                        <label class="control-label">Khoa</label>
                         <input asp-for="FacultyId" class="form-control" />
                         <span asp-validation-for="FacultyId" class="text-danger"></span>
                     </div>
                     <div class="form-group">
-                        <label asp-for="ThesisId" class="control-label"></label>
+                        <label class="control-label">Mã luận văn</label>
                         <input asp-for="ThesisId" class="form-control" />
                         <span asp-validation-for="ThesisId" class="text-danger"></span>
                     </div>
                     <div class="form-group">
-                        <label asp-for="Language" class="control-label"></label>
+                        <label class="control-label">Ngôn ngữ</label>
                         <input asp-for="Language" class="form-control" />
                         <span asp-validation-for="Language" class="text-danger"></span>
                     </div>
                     <div class="form-group">
-                        <label asp-for="FileContent" class="control-label"></label>
+                        <label class="control-label">File luận văn</label>
                         <input asp-for="FileContent" type="file" class="form-control" />
                         <span asp-validation-for="FileContent" class="text-danger"></span>
                     </div>
                     <div class="form-group">
-                        <label asp-for="ProtectedAt" class="control-label"></label>
+                        <label class="control-label">Ngày bảo vệ</label>
+
                         <input asp-for="ProtectedAt" class="form-control" />
+
                         <span asp-validation-for="ProtectedAt" class="text-danger"></span>
                     </div>
                     <div class="form-group">
-                        <label asp-for="MakedAt" class="control-label"></label>
+                        <label class="control-label">Ngày thực hiện</label>
+
                         <input asp-for="MakedAt" class="form-control" />
                         <span asp-validation-for="MakedAt" class="text-danger"></span>
                     </div>
                     <div class="form-group">
-                        <label asp-for="FinishedAt" class="control-label"></label>
+                        <label class="control-label">Ngày kết thúc</label>
+
                         <input asp-for="FinishedAt" class="form-control" />
                         <span asp-validation-for="FinishedAt" class="text-danger"></span>
                     </div>
                     <div class="form-group">
-                        <label asp-for="Score" class="control-label"></label>
+                        <label class="control-label">Điểm</label>
                         <input asp-for="Score" class="form-control" />
                         <span asp-validation-for="Score" class="text-danger"></span>
                     </div>
-                    <div class="form-group form-check">
-                        <label class="form-check-label">
-                            <input class="form-check-input" asp-for="IsProtected" /> @Html.DisplayNameFor(model => model.IsProtected)
-                        </label>
-                    </div>
+
                     <div class="form-group">
-                        <input type="submit" value="Create" class="btn btn-primary" />
+                        <input type="submit" value="Lưu" class="btn btn-primary" />
                     </div>
                 </form>
             </div>
         </div>
     </div>
 </div>
+

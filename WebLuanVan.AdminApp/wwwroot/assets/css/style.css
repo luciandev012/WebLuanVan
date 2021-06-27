@@ -30,3 +30,15 @@
     background-color: red;
     display: block;
 }
+.input-form{
+    padding: 0 20px;
+}
+#search{
+    width: 100%!important;
+}
+#filterRow{
+    align-content: center;
+}
+#btnRow{
+    padding: 1rem 0!important;
+}
