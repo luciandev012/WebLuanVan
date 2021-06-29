@@ -1,4 +1,4 @@
-﻿@model WebLuanVan.Data.ViewModels.ModelBinding.LectureViewModel
+﻿@model WebLuanVan.Data.ViewModels.ModelBinding.MajorViewModel
 
 @{
     ViewData["Title"] = "Delete";
@@ -17,13 +17,14 @@
                         <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
                             <li class="breadcrumb-item"><a href="/"><i class="fas fa-home"></i></a></li>
                             <li class="breadcrumb-item"><a href="#">Table</a></li>
-                            <li class="breadcrumb-item active" aria-current="page">Ngành</li>
+                            <li class="breadcrumb-item active" aria-current="page">Giảng viên</li>
                         </ol>
                     </nav>
                 </div>
                 <div class="col-lg-6 col-5 text-right">
-                    <a asp-action="Index" asp-controller="Lecture" class="btn btn-sm btn-neutral">Danh sách giảng viên</a>
+                    <a asp-action="Index" asp-controller="Major" class="btn btn-sm btn-neutral">Danh sách ngành</a>
                     <a href="#" class="btn btn-sm btn-neutral">Filters</a>
+                </div>
             </div>
         </div>
     </div>
@@ -35,37 +36,31 @@
             <div class="card">
                 <!-- Card header -->
                 <div class="card-header border-0">
-                    <h3 class="mb-0">Table users</h3>
+                    <h3 class="mb-0">Xoá ngành</h3>
                 </div>
                 <div class="row" style="padding:1.5rem">
 
                     <div class="col-md-6">
                         <dl class="row">
-                            <h6>Bạn có muốn xoá giảng viên không?</h6>
+                            <h6>Bạn có muốn xoá khoa không?</h6>
                             <hr />
                             <dt class="col-sm-2">
-                                @Html.DisplayNameFor(model => model.LectureName)
+                                @Html.DisplayNameFor(model => model.MajorId)
                             </dt>
                             <dd class="col-sm-10">
-                                @Html.DisplayFor(model => model.LectureName)
+                                @Html.DisplayFor(model => model.MajorId)
                             </dd>
                             <dt class="col-sm-2">
-                                @Html.DisplayNameFor(model => model.LectureRole)
+                                @Html.DisplayNameFor(model => model.MajorName)
                             </dt>
                             <dd class="col-sm-10">
-                                @Html.DisplayFor(model => model.LectureRole)
-                            </dd>
-                            <dt class="col-sm-2">
-                                @Html.DisplayNameFor(model => model.Email)
-                            </dt>
-                            <dd class="col-sm-10">
-                                @Html.DisplayFor(model => model.Email)
+                                @Html.DisplayFor(model => model.MajorName)
                             </dd>
                         </dl>
 
                         <form asp-action="Delete" method="post">
-                            <input type="submit" value="Xoá" class="btn btn-danger" /> 
-                            
+                            <input type="submit" value="Xoá" class="btn btn-danger" />
+
                         </form>
                     </div>
                 </div>

@@ -10,8 +10,6 @@ namespace WebLuanVan.Data.Entity
     {
         [BsonId]
         public ObjectId Id { get; set; }
-        [BsonElement("facultyName")]
-        public string FacultyName { get; set; }
         [BsonElement("facultyId")]
         public string FacultyId { get; set; }
         [BsonElement("phoneNumber")]
@@ -20,8 +18,8 @@ namespace WebLuanVan.Data.Entity
         public string StudentName { get; set; }
         [BsonElement("studentId")]
         public string StudentId { get; set; }
-        [BsonElement("class")]
-        public string ClassName { get; set; }
+        [BsonElement("majorId")]
+        public string MajorId { get; set; }
 
     }
 }

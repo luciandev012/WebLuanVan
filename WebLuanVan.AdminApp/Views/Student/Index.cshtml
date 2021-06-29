@@ -1,0 +1,144 @@
+﻿@using WebLuanVan.Data.ViewModels.Common
+@model PagedResult<WebLuanVan.Data.ViewModels.ModelBinding.StudentViewModel>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Scripts{
+    <script>
+        setTimeout(function () {
+            $("#msgAlert").fadeOut('slow');
+        }, 1000);
+    </script>
+}
+
+
+<!-- Header -->
+<div class="header bg-primary pb-6">
+    <div class="container-fluid">
+        <div class="header-body">
+            <div class="row align-items-center py-4">
+                <div class="col-lg-6 col-7">
+                    <h6 class="h2 text-white d-inline-block mb-0">Tables</h6>
+                    <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
+                        <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
+                            <li class="breadcrumb-item"><a href="/"><i class="fas fa-home"></i></a></li>
+                            <li class="breadcrumb-item"><a href="#">Sinh viên</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Sinh viên</li>
+                        </ol>
+                    </nav>
+                </div>
+                <div class="col-lg-6 col-5 text-right">
+                    <a asp-action="Create" asp-controller="Student" class="btn btn-sm btn-neutral" id="btnNew">Tạo mới</a>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Page content -->
+<div class="container-fluid mt--6">
+    <div class="row">
+        <div class="col">
+            <div class="card">
+                <!-- Card header -->
+                <div class="card-header border-0">
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h3 class="mb-0">Danh sách sinh viên</h3>
+                        </div>
+                        <div class="col-md-6">
+                            <a asp-action="Index" asp-controller="Student" class="btn btn-sm btn-neutral" id="btnNew">Danh sách đầy đủ</a>
+                        </div>
+                    </div>
+                </div>
+                <!-- Search form -->
+                <form class="navbar-search navbar-search-light form-inline mr-sm-3" id="navbar-search-main">
+
+                    <div class="row">
+                        <div class="form-group mb-0">
+                            <div class="input-group input-group-alternative input-group-merge">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fas fa-search"></i></span>
+                                </div>
+                                <input class="form-control" placeholder="Search" value="@ViewBag.Keyword" type="text" name="keyword">
+                            </div>
+                        </div>
+                        <button type="button" class="close" data-action="search-close" data-target="#navbar-search-main" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+
+
+
+                </form>
+                <!-- Light table -->
+                <div class="table-responsive">
+                    @if (ViewBag.Message != null)
+                    {
+                        <div id="msgAlert" class="alert alert-success" role="alert">
+                            @ViewBag.Message
+                        </div>
+                    }
+                    <table class="table align-items-center table-flush">
+                        <thead class="thead-light">
+                            <tr>
+
+
+                                <th>
+                                    Tên sinh viên
+                                </th>
+                                <th>
+                                    Mã sinh viên
+                                </th>
+                                <th>
+                                    Số điện thoại
+                                </th>
+                                <th>
+                                    Ngành
+                                </th>
+                                <th>
+                                    Khoa
+                                </th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody class="list">
+                            @foreach (var item in Model.Items)
+                            {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.StudentName)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.StudentId)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.PhoneNumber)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.MajorId)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.FacultyId)
+                                </td>
+                                <td>
+                                    <a href="/Student/Edit/@item.Id" class="btn btn-sm btn-neutral" id="btnNew">Sửa</a>
+                                    <a href="/Student/Delete/@item.Id" class="btn btn-sm btn-neutral" id="btnNew">Xoá</a>
+                                </td>
+                            </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <!-- Card footer -->
+
+                @await Component.InvokeAsync("Paging", Model)
+            </div>
+        </div>
+    </div>
+</div>

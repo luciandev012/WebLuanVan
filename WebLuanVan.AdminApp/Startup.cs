@@ -44,6 +44,9 @@ namespace WebLuanVan.AdminApp
             services.AddTransient<IUserApiClient, UserApiClient>();
             services.AddTransient<IThesisApiClient, ThesisApiClient>();
             services.AddTransient<ILectureApiClient, LectureApiClient>();
+            services.AddTransient<IFacultyApiClient, FacultyApiClient>();
+            services.AddTransient<IMajorApiClient, MajorApiClient>();
+            services.AddTransient<IStudentApiClient, StudentApiClient>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
