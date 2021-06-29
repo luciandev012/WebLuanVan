@@ -15,6 +15,6 @@ namespace WebLuanVan.Data.Entity
         [BsonElement("majorId")]
         public string MajorId { get; set; }
         [BsonElement("facultyId")]
-        public string FaculyId { get; set; }
+        public string FacultyId { get; set; }
     }
 }

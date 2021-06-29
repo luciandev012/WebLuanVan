@@ -1,4 +1,4 @@
-﻿@model WebLuanVan.Data.ViewModels.ModelBinding.LectureViewModel
+﻿@model WebLuanVan.Data.ViewModels.ModelBinding.StudentViewModel
 
 @{
     ViewData["Title"] = "Edit";
@@ -18,12 +18,12 @@
                         <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
                             <li class="breadcrumb-item"><a href="/"><i class="fas fa-home"></i></a></li>
                             <li class="breadcrumb-item"><a href="#">Table</a></li>
-                            <li class="breadcrumb-item active" aria-current="page">Giảng viên</li>
+                            <li class="breadcrumb-item active" aria-current="page">Sinh viên</li>
                         </ol>
                     </nav>
                 </div>
                 <div class="col-lg-6 col-5 text-right">
-                    <a asp-action="Index" asp-controller="Lecture" class="btn btn-sm btn-neutral">Giảng viên</a>
+                    <a asp-action="Index" asp-controller="Student" class="btn btn-sm btn-neutral">Sinh viên</a>
                     <a href="#" class="btn btn-sm btn-neutral">Filters</a>
                 </div>
             </div>
@@ -37,33 +37,39 @@
             <div class="card">
                 <!-- Card header -->
                 <div class="card-header border-0">
-                    <h3 class="mb-0">Bảng giảng viên</h3>
+                    <h3 class="mb-0">Sửa khoa</h3>
                 </div>
                 <div class="row" style="padding: 1.5rem">
                     <div class="col-md-4">
                         <form asp-action="Edit" method="post">
                             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                            
+
                             <div class="form-group">
-                                <label asp-for="LectureId" class="control-label"></label>
-                                <input asp-for="LectureId" class="form-control" />
-                                <span asp-validation-for="LectureId" class="text-danger"></span>
+                                <label asp-for="StudentId" class="control-label"></label>
+                                <input asp-for="StudentId" class="form-control" />
+                                <span asp-validation-for="StudentId" class="text-danger"></span>
                             </div>
                             <div class="form-group">
-                                <label asp-for="LectureName" class="control-label"></label>
-                                <input asp-for="LectureName" class="form-control" />
-                                <span asp-validation-for="LectureName" class="text-danger"></span>
+                                <label asp-for="StudentName" class="control-label"></label>
+                                <input asp-for="StudentName" class="form-control" />
+                                <span asp-validation-for="StudentName" class="text-danger"></span>
                             </div>
                             <div class="form-group">
-                                <label asp-for="LectureRole" class="control-label"></label>
-                                <input asp-for="LectureRole" class="form-control" />
-                                <span asp-validation-for="LectureRole" class="text-danger"></span>
+                                <label asp-for="PhoneNumber" class="control-label"></label>
+                                <input asp-for="PhoneNumber" class="form-control" />
+                                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
                             </div>
                             <div class="form-group">
-                                <label asp-for="Email" class="control-label"></label>
-                                <input asp-for="Email" class="form-control" />
-                                <span asp-validation-for="Email" class="text-danger"></span>
+                                <label asp-for="MajorId" class="control-label"></label>
+                                <input asp-for="MajorId" class="form-control" />
+                                <span asp-validation-for="MajorId" class="text-danger"></span>
                             </div>
+                            <div class="form-group">
+                                <label asp-for="FacultyId" class="control-label"></label>
+                                <input asp-for="FacultyId" class="form-control" />
+                                <span asp-validation-for="FacultyId" class="text-danger"></span>
+                            </div>
+
                             <div class="form-group">
                                 <input type="submit" value="Lưu lại" class="btn btn-primary" />
                             </div>
@@ -71,7 +77,7 @@
                     </div>
                 </div>
 
-               
+
 
             </div>
         </div>

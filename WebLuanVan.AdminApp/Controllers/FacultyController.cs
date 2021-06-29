@@ -10,12 +10,12 @@ using WebLuanVan.Data.ViewModels.Request;
 
 namespace WebLuanVan.AdminApp.Controllers
 {
-    public class LectureController : Controller
+    public class FacultyController : Controller
     {
-        private readonly ILectureApiClient _lectureApiClient;
-        public LectureController(ILectureApiClient lectureApiClient)
+        private readonly IFacultyApiClient _facultyApiClient;
+        public FacultyController(IFacultyApiClient facultyApiClient)
         {
-            _lectureApiClient = lectureApiClient;
+            _facultyApiClient = facultyApiClient;
         }
         public async Task<IActionResult> Index([FromQuery] PagingRequest request)
         {
@@ -27,7 +27,7 @@ namespace WebLuanVan.AdminApp.Controllers
             request.BearerToken = session;
             ViewBag.Message = TempData["result"];
             ViewBag.Keyword = request.Keyword;
-            var result = await _lectureApiClient.GetLecturePaging(request);
+            var result = await _facultyApiClient.GetFacultyPaging(request);
             return View(result);
         }
         [HttpGet]
@@ -36,36 +36,36 @@ namespace WebLuanVan.AdminApp.Controllers
             return View();
         }
         [HttpPost]
-        public async Task<IActionResult> Create(LectureViewModel request)
+        public async Task<IActionResult> Create(FacultyViewModel request)
         {
             //if (!ModelState.IsValid)
             //{
             //    return View(ModelState);
             //}
-            var result = await _lectureApiClient.Create(request);
+            var result = await _facultyApiClient.Create(request);
             if (result)
             {
                 TempData["result"] = "Thành công";
                 return RedirectToAction("Index");
             }
-            
+
 
             return View(request);
         }
         [HttpGet]
         public async Task<IActionResult> Edit(string id)
         {
-            var lecture = await _lectureApiClient.GetLectureById(id);
+            var lecture = await _facultyApiClient.GetFacultyById(id);
             return View(lecture);
         }
         [HttpPost]
-        public async Task<IActionResult> Edit(LectureViewModel request)
+        public async Task<IActionResult> Edit(FacultyViewModel request)
         {
             //if (!ModelState.IsValid)
             //{
             //    return View(ModelState);
             //}
-            var result = await _lectureApiClient.Update(request);
+            var result = await _facultyApiClient.Update(request);
             if (result)
             {
                 TempData["result"] = "Thành công";
@@ -76,17 +76,17 @@ namespace WebLuanVan.AdminApp.Controllers
         [HttpGet]
         public async Task<IActionResult> Delete(string id)
         {
-            var lecture = await _lectureApiClient.GetLectureById(id);
+            var lecture = await _facultyApiClient.GetFacultyById(id);
             return View(lecture);
         }
         [HttpPost]
-        public async Task<IActionResult> Delete(LectureViewModel request)
+        public async Task<IActionResult> Delete(FacultyViewModel request)
         {
             //if (!ModelState.IsValid)
             //{
             //    return View(ModelState);
             //}
-            var result = await _lectureApiClient.Delete(request.Id);
+            var result = await _facultyApiClient.Delete(request.Id);
             if (result)
             {
                 TempData["result"] = "Thành công";
