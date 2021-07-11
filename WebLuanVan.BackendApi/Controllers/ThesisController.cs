@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Driver;
+using Nest;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,10 +21,11 @@ namespace WebLuanVan.BackendApi.Controllers
     {
         private IMongoDatabase database;
         private readonly IManageThesisService _manageThesisServices;
-        public ThesisController(IMongoClient client, IStorageService storageService)
+        
+        public ThesisController(IMongoClient client, IStorageService storageService, IElasticClient elasticClient)
         {
             database = GetDatabase.Get(client);
-            _manageThesisServices = new ManageThesisServices(database, storageService);
+            _manageThesisServices = new ManageThesisServices(database, storageService, elasticClient);
         }
 
         [HttpGet]

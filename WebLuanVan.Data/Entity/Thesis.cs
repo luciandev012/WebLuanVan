@@ -32,11 +32,11 @@ namespace WebLuanVan.Data.Entity
         [BsonElement("thesisId")]
         public string ThesisId { get; set; }
         [BsonElement("protectedAt")]
-        public DateTime? ProtectedAt { get; set; }
+        public DateTime ProtectedAt { get; set; }
         [BsonElement("makedAt")]
-        public DateTime? MakedAt { get; set; }
+        public DateTime MakedAt { get; set; }
         [BsonElement("finishedAt")]
-        public DateTime? FinishedAt { get; set; }
+        public DateTime FinishedAt { get; set; }
         [BsonElement("language")]
         public string Language { get; set; }
         [BsonElement("score")]

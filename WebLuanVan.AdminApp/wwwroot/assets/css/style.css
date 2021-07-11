@@ -42,3 +42,6 @@
 #btnRow{
     padding: 1rem 0!important;
 }
+#filterRow > input{
+    border: 1px solid grey;
+}

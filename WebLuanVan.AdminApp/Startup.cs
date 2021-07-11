@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using WebLuanVan.AdminApp.Services;
+using WebLuanVan.Data.ViewModels.Request.Thesis;
 using WebLuanVan.Data.ViewModels.Request.Users;
 
 namespace WebLuanVan.AdminApp
@@ -37,7 +38,8 @@ namespace WebLuanVan.AdminApp
                 });
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddControllersWithViews()
-                     .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<LoginRequestValidator>());
+                     .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<LoginRequestValidator>())
+                     .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<ThesisValidator>());
             services.AddSession(option => {
                 option.IdleTimeout = TimeSpan.FromMinutes(30);
             });

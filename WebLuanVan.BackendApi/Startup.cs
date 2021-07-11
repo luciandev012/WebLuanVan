@@ -10,12 +10,15 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using MongoDB.Driver;
+using Nest;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WebLuanVan.Data.Entity;
 using WebLuanVan.Data.Services.Common;
+using WebLuanVan.Data.ViewModels.Request.Thesis;
 using WebLuanVan.Data.ViewModels.Request.Users;
 
 namespace WebLuanVan.BackendApi
@@ -42,10 +45,11 @@ namespace WebLuanVan.BackendApi
 
             services.AddTransient<IStorageService, StorageService>();
             services.AddTransient<IValidator<LoginRequest>, LoginRequestValidator>();
-
-
             services.AddControllers()
                 .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<LoginRequestValidator>(discoveredType => discoveredType.ValidatorType != typeof(LoginRequestValidator)));
+            services.AddTransient<IValidator<ThesisRequest>, ThesisValidator>();
+            services.AddControllers()
+                .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<ThesisValidator>(discoveredType => discoveredType.ValidatorType != typeof(ThesisValidator)));
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Swagger WebLuanVan Solution", Version = "v1" });
@@ -77,6 +81,13 @@ namespace WebLuanVan.BackendApi
                     }
                 });
             });
+            //elasticSearch
+            var settings = new ConnectionSettings()
+                .DefaultMappingFor<ThesisData>(x => x.IndexName("manage_thesis"));
+            services.AddSingleton<IElasticClient>(new ElasticClient(settings));
+            //
+
+
             string issuer = Configuration.GetValue<string>("Tokens:Issuer");
             string signingKey = Configuration.GetValue<string>("Tokens:Key");
             byte[] signingKeyBytes = Encoding.UTF8.GetBytes(signingKey);
