@@ -9,5 +9,10 @@ namespace WebLuanVan.Data.ViewModels.Request.Thesis
     {
         public string Keyword { get; set; }
         public string LanguageId { get; set; }
+        public string StudentCode { get; set; }
+        public string Class { get; set; }
+        public string Faculty { get; set; }
+        public string AcademicYear { get; set; }
+        public string Major { get; set; }
     }
 }
