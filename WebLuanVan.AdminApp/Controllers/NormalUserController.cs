@@ -29,6 +29,12 @@ namespace WebLuanVan.AdminApp.Controllers
             }
             request.BearerToken = session;
             request.Role = "User";
+            request.Major = "a";
+            request.StudentCode = "a";
+            request.Faculty = "a";
+            request.Class = "a";
+            request.AcademicYear = "1";
+            //request.
             var data = await _thesisApiClient.GetThesisPaging(request);
             ViewBag.Keyword = request.Keyword;
             var languages = _thesisApiClient.GetLanguages();

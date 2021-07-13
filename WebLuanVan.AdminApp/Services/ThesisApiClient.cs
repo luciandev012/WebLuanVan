@@ -68,7 +68,7 @@ namespace WebLuanVan.AdminApp.Services
             client.BaseAddress = new Uri("https://localhost:5001");
             client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", session);
             var response = await client.GetAsync($"/api/thesis?pageIndex={request.PageIndex}&pageSize={request.PageSize}&keyword={request.Keyword}&languageId={request.LanguageId}" +
-                $"&class={request.Class}&academicYear={request.AcademicYear}&studentCode={request.StudentCode}&faculty={request.Faculty}&role={request.Role}");
+                $"&class={request.Class}&academicYear={request.AcademicYear}&studentCode={request.StudentCode}&faculty={request.Faculty}&role={request.Role}&major={request.Major}");
             var body = await response.Content.ReadAsStringAsync();
             var thesis = JsonConvert.DeserializeObject<PagedResult<ThesisViewModel>>(body);
             return thesis;

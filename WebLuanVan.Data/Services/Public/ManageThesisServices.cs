@@ -186,7 +186,7 @@ namespace WebLuanVan.Data.Services.Public
 
                 foreach (var r in res)
                 {
-                    var t = await _thesisCollection.Find(x => x.ThesisId == r.ThesisId && x.Language == request.LanguageId && x.FacultyId == request.Faculty).FirstOrDefaultAsync();
+                    var t = await _thesisCollection.Find(x => x.ThesisId == r.ThesisId && x.Language == request.LanguageId).FirstOrDefaultAsync();
                     result.Add(t);
                 }
             }
