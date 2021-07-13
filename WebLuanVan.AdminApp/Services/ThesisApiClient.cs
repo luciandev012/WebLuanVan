@@ -68,7 +68,7 @@ namespace WebLuanVan.AdminApp.Services
             client.BaseAddress = new Uri("https://localhost:5001");
             client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", session);
             var response = await client.GetAsync($"/api/thesis?pageIndex={request.PageIndex}&pageSize={request.PageSize}&keyword={request.Keyword}&languageId={request.LanguageId}" +
-                $"&class={request.Class}&academicYear={request.AcademicYear}&studentCode={request.StudentCode}&faculty={request.Faculty}");
+                $"&class={request.Class}&academicYear={request.AcademicYear}&studentCode={request.StudentCode}&faculty={request.Faculty}&role={request.Role}");
             var body = await response.Content.ReadAsStringAsync();
             var thesis = JsonConvert.DeserializeObject<PagedResult<ThesisViewModel>>(body);
             return thesis;
@@ -155,6 +155,18 @@ namespace WebLuanVan.AdminApp.Services
             client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", session);
             var response = await client.PutAsync($"/api/thesis/{id}/status", httpContent);        
             return response.IsSuccessStatusCode;
+        }
+
+        public async Task<Charts> GetCharts()
+        {
+            var client = _httpClientFactory.CreateClient();
+            var session = _httpContextAccessor.HttpContext.Session.GetString("Token");
+            client.BaseAddress = new Uri("https://localhost:5001");
+            client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", session);
+            var response = await client.GetAsync($"/api/thesis/chart");
+            var body = await response.Content.ReadAsStringAsync();
+            var charts = JsonConvert.DeserializeObject<Charts>(body);
+            return charts;
         }
     }
 }

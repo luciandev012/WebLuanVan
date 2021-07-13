@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MongoDB.Bson;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,5 +20,6 @@ namespace WebLuanVan.Data.Services.System.Users
         Task<bool> Delete(string id);
         Task CreateIndexAsync();
         Task<bool> ChangeStatus(string id);
+        ObjectId GetRoleId(string roleName);
     }
 }

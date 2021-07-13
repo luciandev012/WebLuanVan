@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -7,35 +9,33 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using WebLuanVan.AdminApp.Models;
+using WebLuanVan.AdminApp.Services;
 
 namespace WebLuanVan.AdminApp.Controllers
 {
     [Authorize]
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly IThesisApiClient _thesisApiClient;
+        private readonly IConfiguration _configuration;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(IThesisApiClient thesisApiClient, IConfiguration configuration)
         {
-            _logger = logger;
+            _thesisApiClient = thesisApiClient;
+            _configuration = configuration;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var user = User.Identity.Name;
-
-            return View();
+            var session = HttpContext.Session.GetString("Token");
+            if (session == null)
+            {
+                return RedirectToAction("Login", "User");
+            }
+            var result = await _thesisApiClient.GetCharts();
+            return View(result);
         }
 
-        public IActionResult Privacy()
-        {
-            return View();
-        }
-
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        }
+        
     }
 }

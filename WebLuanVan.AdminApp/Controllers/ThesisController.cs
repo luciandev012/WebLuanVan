@@ -37,6 +37,7 @@ namespace WebLuanVan.AdminApp.Controllers
 
             //};
             request.BearerToken = session;
+            request.Role = "Admin";
             var data = await _thesisApiClient.GetThesisPaging(request);
             ViewBag.Keyword = request.Keyword;
             var languages = _thesisApiClient.GetLanguages();
