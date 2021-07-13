@@ -1,0 +1,2 @@
+mongo-connector -c config.json -m localhost:27017 -t localhost:9200 -d elastic2_doc_manager
+mongod --dbpath "dbpath" --logpath "logpath.mongod.log" --port 27017 --storageEngine=wiredTiger --journal -replSet myReplSet
