@@ -9,6 +9,7 @@ namespace WebLuanVan.AdminApp.Controllers
 {
     public class BaseController : Controller
     {
+        
         public BaseController()
         {
             var session = HttpContext.Session.GetString("Token");

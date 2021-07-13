@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Logging;
 using Microsoft.IdentityModel.Tokens;
+using MongoDB.Bson;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -78,9 +79,11 @@ namespace WebLuanVan.AdminApp.Controllers
                 userPrincipal,
                 authProperties);
             var userRole = userPrincipal.Claims.ToArray()[1].Value.ToString();
-            if (userRole.Equals("60bfb4a04b461f336974ae3a"))
+            
+            if (userRole == "User")
             {
-                return RedirectToAction("Forbidden", "User");
+                HttpContext.Session.SetString("Token", token.ResultObj);
+                return RedirectToAction("Index", "NormalUser");
             }
             HttpContext.Session.SetString("Token", token.ResultObj);
             return RedirectToAction("Index", "Home");

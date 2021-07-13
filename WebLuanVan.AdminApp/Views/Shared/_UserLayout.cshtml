@@ -44,58 +44,17 @@
                             </a>
                         </li>
 
-                        @*<li class="nav-item">
-            <a class="nav-link collapse" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
-                <i class="ni ni-single-02 text-yellow"></i>
-                <span class="nav-link-text">Tables</span>
-            </a>
-            <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#sideBar">
-                <div class="bg-white py-2 collapse-inner rounded">
-                    <a class="collapse-item" href="/User/Index">Tài khoản</a>
-                    <a class="collapse-item" href="/Thesis/Index">Luận văn</a>
-                </div>
-            </div>
-        </li>*@
                         <li class="nav-item">
-                            <a class="nav-link" href="/User/Index">
-                                <i class="ni ni-circle-08"></i>
-                                <span class="nav-link-text">Quản lý tài khoản</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/Thesis/Index">
+                            <a class="nav-link" href="/NormalUser/Index">
                                 <i class="fa fa-file"></i>
                                 <span class="nav-link-text">Quản lý luận văn</span>
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/Faculty/Index">
-                                <i class="fa fa-graduation-cap"></i>
-                                <span class="nav-link-text">Quản lý khoa</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/Student/Index">
-                                <i class="fa fa-graduation-cap"></i>
-                                <span class="nav-link-text">Quản lý sinh viên</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/Major/Index">
-                                <i class="ffa fa-graduation-cap"></i>
-                                <span class="nav-link-text">Quản lý ngành</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/Lecture/Index">
-                                <i class="fa fa-graduation-cap"></i>
-                                <span class="nav-link-text">Quản lý giảng viên</span>
-                            </a>
-                        </li>
+                        
                     </ul>
                     <!-- Divider -->
                     <hr class="my-3">
-                    
+
                 </div>
             </div>
         </div>
@@ -315,17 +274,17 @@
                                     <span>My profile</span>
                                 </a>
                                 @*<a href="#!" class="dropdown-item">
-                                    <i class="ni ni-settings-gear-65"></i>
-                                    <span>Settings</span>
-                                </a>
-                                <a href="#!" class="dropdown-item">
-                                    <i class="ni ni-calendar-grid-58"></i>
-                                    <span>Activity</span>
-                                </a>
-                                <a href="#!" class="dropdown-item">
-                                    <i class="ni ni-support-16"></i>
-                                    <span>Support</span>
-                                </a>*@
+                                        <i class="ni ni-settings-gear-65"></i>
+                                        <span>Settings</span>
+                                    </a>
+                                    <a href="#!" class="dropdown-item">
+                                        <i class="ni ni-calendar-grid-58"></i>
+                                        <span>Activity</span>
+                                    </a>
+                                    <a href="#!" class="dropdown-item">
+                                        <i class="ni ni-support-16"></i>
+                                        <span>Support</span>
+                                    </a>*@
                                 <div class="dropdown-divider"></div>
                                 <form method="post" asp-action="Logout" asp-controller="User">
                                     <button type="submit" class="dropdown-item">

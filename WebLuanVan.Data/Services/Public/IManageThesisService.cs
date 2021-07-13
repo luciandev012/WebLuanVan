@@ -17,5 +17,7 @@ namespace WebLuanVan.Data.Services.Public
         Task<ApiResult<PagedResult<ThesisViewModel>>> Get(ThesisPagingRequest request);
         Task<ThesisViewModel> GetThesisById(string id);
         Task<bool> ChangeThesisStatus(string id);
+        Task<Charts> GetCharts();
+        Task<ApiResult<PagedResult<ThesisViewModel>>> GetThesisUserMode(ThesisPagingRequest request);
     }
 }

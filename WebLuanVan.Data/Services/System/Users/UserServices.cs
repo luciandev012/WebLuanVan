@@ -47,7 +47,7 @@ namespace WebLuanVan.Data.Services.System.Users
             var claims = new[]
             {
                 new Claim(ClaimTypes.Name, account.FirstName + " " + account.LastName),
-                new Claim(ClaimTypes.Role, account.RoleId.ToString()),
+                new Claim(ClaimTypes.Role, GetRoleName(account.RoleId))
                 //new Claim(ClaimTypes.)
             };
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Tokens:Key"]));
@@ -146,7 +146,7 @@ namespace WebLuanVan.Data.Services.System.Users
                 FirstName = request.FirstName,
                 LastName = request.LastName,
                 Password = Common.Common.CreateMD5(request.Password),
-                RoleId = await GetRoleId("User"),
+                RoleId = GetRoleId("User"),
                 Username = request.UserName,
                 Status = false
             };
@@ -177,13 +177,17 @@ namespace WebLuanVan.Data.Services.System.Users
             
         }
 
-        private async Task<ObjectId> GetRoleId(string roleName)
+        public ObjectId GetRoleId(string roleName)
         {
-            var role = await _roleCollection.Find(x => x.Name == roleName).FirstOrDefaultAsync();
+            var role = _roleCollection.Find(x => x.Name == roleName).FirstOrDefault();
 
             return role.Id;
         }
-
+        private string GetRoleName(ObjectId roleId)
+        {
+            var name = _roleCollection.Find(x => x.Id == roleId).FirstOrDefault();
+            return name.Name;
+        }
         public async Task<bool> ChangeStatus(string id)
         {
             ObjectId objId = ObjectId.Parse(id);

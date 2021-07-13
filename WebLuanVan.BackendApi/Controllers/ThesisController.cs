@@ -85,5 +85,11 @@ namespace WebLuanVan.BackendApi.Controllers
             }
             return Ok();
         }
+        [HttpGet("chart")]
+        public async Task<IActionResult> GetChart()
+        {
+            var res = await _manageThesisServices.GetCharts();
+            return Ok(res);
+        }
     }
 }

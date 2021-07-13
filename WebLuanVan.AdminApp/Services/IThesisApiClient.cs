@@ -19,5 +19,6 @@ namespace WebLuanVan.AdminApp.Services
         Task<ThesisViewModel> GetThesisById(string id);
         Task<bool> Delete(string id);
         Task<bool> Status(string id);
+        Task<Charts> GetCharts();
     }
 }

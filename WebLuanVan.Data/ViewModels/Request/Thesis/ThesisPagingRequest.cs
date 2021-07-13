@@ -14,5 +14,6 @@ namespace WebLuanVan.Data.ViewModels.Request.Thesis
         public string Faculty { get; set; }
         public string AcademicYear { get; set; }
         public string Major { get; set; }
+        public string Role { get; set; }
     }
 }
