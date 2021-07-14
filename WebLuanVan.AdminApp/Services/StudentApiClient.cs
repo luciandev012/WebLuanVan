@@ -79,5 +79,27 @@ namespace WebLuanVan.AdminApp.Services
             var response = await client.PutAsync($"/api/students", httpContent);
             return response.IsSuccessStatusCode;
         }
+        public async Task<List<FacultyViewModel>> GetFaculty()
+        {
+            var client = _httpClientFactory.CreateClient();
+            var session = _httpContextAccessor.HttpContext.Session.GetString("Token");
+            client.BaseAddress = new Uri("https://localhost:5001");
+            client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", session);
+            var response = await client.GetAsync($"/api/faculties/list");
+            var body = await response.Content.ReadAsStringAsync();
+            var faculty = JsonConvert.DeserializeObject<List<FacultyViewModel>>(body);
+            return faculty;
+        }
+        public async Task<List<MajorViewModel>> GetMajor()
+        {
+            var client = _httpClientFactory.CreateClient();
+            var session = _httpContextAccessor.HttpContext.Session.GetString("Token");
+            client.BaseAddress = new Uri("https://localhost:5001");
+            client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", session);
+            var response = await client.GetAsync($"/api/majors/list");
+            var body = await response.Content.ReadAsStringAsync();
+            var major = JsonConvert.DeserializeObject<List<MajorViewModel>>(body);
+            return major;
+        }
     }
 }

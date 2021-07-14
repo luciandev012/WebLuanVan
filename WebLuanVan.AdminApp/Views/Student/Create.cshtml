@@ -59,14 +59,14 @@
                         <span asp-validation-for="PhoneNumber" class="text-danger"></span>
                     </div>
                     <div class="form-group">
-                        <label asp-for="MajorId" class="control-label"></label>
-                        <input asp-for="MajorId" class="form-control" />
-                        <span asp-validation-for="MajorId" class="text-danger"></span>
+                        <select name="majorId" asp-items="@ViewBag.Majors" class="form-control">
+                            <option>--Chọn ngành--</option>
+                        </select>
                     </div>
                     <div class="form-group">
-                        <label asp-for="FacultyId" class="control-label"></label>
-                        <input asp-for="FacultyId" class="form-control" />
-                        <span asp-validation-for="FacultyId" class="text-danger"></span>
+                        <select name="facultyId" asp-items="@ViewBag.Faculties" class="form-control">
+                            <option>--Chọn khoa--</option>
+                        </select>
                     </div>
                     <div class="form-group">
                         <input type="submit" value="Thêm mới" class="btn btn-primary" />

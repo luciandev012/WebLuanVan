@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using WebLuanVan.Data.Entity;
 using WebLuanVan.Data.ViewModels.Common;
 using WebLuanVan.Data.ViewModels.ModelBinding;
 using WebLuanVan.Data.ViewModels.Request;
@@ -43,6 +44,8 @@ namespace WebLuanVan.AdminApp.Services
             var response = await client.DeleteAsync($"/api/faculties/{id}");
             return response.IsSuccessStatusCode;
         }
+
+        
 
         public async Task<FacultyViewModel> GetFacultyById(string id)
         {

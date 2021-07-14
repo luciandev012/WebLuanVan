@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,8 +32,21 @@ namespace WebLuanVan.AdminApp.Controllers
             return View(result);
         }
         [HttpGet]
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
+            var faculties = await _studentApiClient.GetFaculty();
+            ViewBag.Faculties = faculties.Select(x => new SelectListItem()
+            {
+                Text = x.FacultyName,
+                Value = x.FacultyId,
+
+            });
+            var majors = await _studentApiClient.GetMajor();
+            ViewBag.Majors = majors.Select(x => new SelectListItem()
+            {
+                Text = x.MajorName,
+                Value = x.MajorId
+            });
             return View();
         }
         [HttpPost]

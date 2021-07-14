@@ -42,6 +42,22 @@ namespace WebLuanVan.Data.Services.Admin
             return result.DeletedCount > 0;
         }
 
+        public async Task<List<StudentViewModel>> GetStudent()
+        {
+            var res = await _studentCollection.Find(x => true).ToListAsync();
+            List<StudentViewModel> lsvm = new List<StudentViewModel>();
+            foreach(var s in res)
+            {
+                StudentViewModel svm = new StudentViewModel()
+                {
+                    StudentId = s.StudentId,
+                    StudentName = s.StudentName
+                };
+                lsvm.Add(svm);
+            }
+            return lsvm;
+        }
+
         public async Task<StudentViewModel> GetStudentById(string id)
         {
             ObjectId objId = ObjectId.Parse(id);

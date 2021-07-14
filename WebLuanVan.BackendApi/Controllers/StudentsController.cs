@@ -72,5 +72,15 @@ namespace WebLuanVan.BackendApi.Controllers
             }
             return Ok();
         }
+        [HttpGet("list")]
+        public async Task<IActionResult> GetStudent()
+        {
+            var res = await _manageStudentServices.GetStudent();
+            if(res != null)
+            {
+                return Ok(res);
+            }
+            return BadRequest();
+        }
     }
 }

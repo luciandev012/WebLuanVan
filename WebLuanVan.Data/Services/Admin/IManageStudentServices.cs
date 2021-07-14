@@ -15,5 +15,6 @@ namespace WebLuanVan.Data.Services.Admin
         Task<bool> Update(StudentViewModel request);
         Task<bool> Delete(string id);
         Task<StudentViewModel> GetStudentById(string id);
+        Task<List<StudentViewModel>> GetStudent();
     }
 }

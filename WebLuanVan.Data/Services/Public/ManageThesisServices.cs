@@ -116,7 +116,8 @@ namespace WebLuanVan.Data.Services.Public
             var thesis = await GetThesisById(id);
             await _storageService.DeleteFileAsync(thesis.Content);
             var result = await _thesisCollection.DeleteOneAsync(filter);
-
+            var filter2 = Builders<ThesisData>.Filter.Eq("thesisId", thesis.ThesisId);
+            await _thesisDataCollection.DeleteOneAsync(filter2);
             return (int)result.DeletedCount;
         }
 
@@ -152,7 +153,7 @@ namespace WebLuanVan.Data.Services.Public
                 if(request.Role == "Admin")
                 {
                     response = await _elasticClient.SearchAsync<ThesisData>(
-                    s => s.Query(q => q.Bool(b => b.
+                    s => s.Index("thesisdata").Query(q => q.Bool(b => b.
                             Must(mu => mu.
                                 Match(m => m.Field(f => f.ThesisName).Query(request.Keyword)), mu => mu.
                                 Match(m => m.Field(f => f.Student).Query(request.StudentCode)), mu => mu.
@@ -166,7 +167,7 @@ namespace WebLuanVan.Data.Services.Public
                 else 
                 {
                     response = await _elasticClient.SearchAsync<ThesisData>(
-                    s => s.Query(q => q.Bool(b => b.
+                    s => s.Index("thesisdata").Query(q => q.Bool(b => b.
                             Should(mu => mu.
                                 Match(m => m.Field(f => f.ThesisName).Query(request.Keyword)), mu => mu.
                                 Match(m => m.Field(f => f.Student).Query(request.Keyword)), mu => mu.
@@ -318,10 +319,10 @@ namespace WebLuanVan.Data.Services.Public
         public async Task<Charts> GetCharts()
         {
             Charts charts = new Charts();
-            var total = await _elasticClient.CountAsync<Thesis>(c => c.Index("index3"));
-            var protectedThesis = await _elasticClient.CountAsync<Thesis>(c => c.Index("index3").Query(q => q.Term(t => t.IsProtected, true)));
-            var notProtectedThesis = await _elasticClient.CountAsync<Thesis>(c => c.Index("index3").Query(q => q.Term(t => t.IsProtected, false)));
-            var thesisGt5 = await _elasticClient.CountAsync<Thesis>(c => c.Index("index3").Query(q => q.Range(r => r.Field(f => f.Score).GreaterThanOrEquals(5))));
+            var total = await _elasticClient.CountAsync<Thesis>(c => c.Index("thesis"));
+            var protectedThesis = await _elasticClient.CountAsync<Thesis>(c => c.Index("thesis").Query(q => q.Term(t => t.IsProtected, true)));
+            var notProtectedThesis = await _elasticClient.CountAsync<Thesis>(c => c.Index("thesis").Query(q => q.Term(t => t.IsProtected, false)));
+            var thesisGt5 = await _elasticClient.CountAsync<Thesis>(c => c.Index("thesis").Query(q => q.Range(r => r.Field(f => f.Score).GreaterThanOrEquals(5))));
 
             charts.TotalThesis = total.Count;
             charts.ProtectedThesis = protectedThesis.Count;

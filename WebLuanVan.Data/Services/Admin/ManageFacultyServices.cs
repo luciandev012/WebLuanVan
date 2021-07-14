@@ -39,6 +39,22 @@ namespace WebLuanVan.Data.Services.Admin
             return result.DeletedCount > 0;
         }
 
+        public async Task<List<FacultyViewModel>> GetFaculty()
+        {
+            var res = await _facultyCollection.Find(x => true).ToListAsync();
+            List<FacultyViewModel> fvm = new List<FacultyViewModel>();
+            foreach(var f in res)
+            {
+                FacultyViewModel fv = new FacultyViewModel()
+                {
+                    FacultyId = f.FacultyId,
+                    FacultyName = f.FacultyName
+                };
+                fvm.Add(fv);
+            }
+            return fvm;
+        }
+
         public async Task<FacultyViewModel> GetFacultyById(string id)
         {
             ObjectId objId = ObjectId.Parse(id);

@@ -15,5 +15,6 @@ namespace WebLuanVan.Data.Services.Admin
         Task<bool> Update(MajorViewModel request);
         Task<bool> Delete(string id);
         Task<MajorViewModel> GetMajorById(string id);
+        Task<List<MajorViewModel>> GetMajor();
     }
 }

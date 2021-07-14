@@ -20,5 +20,9 @@ namespace WebLuanVan.AdminApp.Services
         Task<bool> Delete(string id);
         Task<bool> Status(string id);
         Task<Charts> GetCharts();
+        Task<List<MajorViewModel>> GetMajor();
+        Task<List<FacultyViewModel>> GetFaculty();
+        Task<List<StudentViewModel>> GetStudent();
+        Task<List<LectureViewModel>> GetLecture();
     }
 }

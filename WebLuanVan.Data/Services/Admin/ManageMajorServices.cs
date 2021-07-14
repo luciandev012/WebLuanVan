@@ -39,6 +39,22 @@ namespace WebLuanVan.Data.Services.Admin
             return result.DeletedCount > 0;
         }
 
+        public async Task<List<MajorViewModel>> GetMajor()
+        {
+            var res = await _majorCollection.Find(x => true).ToListAsync();
+            List<MajorViewModel> mvm = new List<MajorViewModel>();
+            foreach (var m in res)
+            {
+                MajorViewModel mv = new MajorViewModel()
+                {
+                    MajorName = m.MajorName,
+                    MajorId = m.MajorId
+                };
+                mvm.Add(mv);
+            }
+            return mvm;
+        }
+
         public async Task<MajorViewModel> GetMajorById(string id)
         {
             ObjectId objId = ObjectId.Parse(id);
@@ -109,6 +125,8 @@ namespace WebLuanVan.Data.Services.Admin
             var result = await _majorCollection.ReplaceOneAsync(filter, major);
             return result.MatchedCount > 0;
         }
+
+        
     }
 
 }
