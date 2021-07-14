@@ -1,11 +1,12 @@
 {
   "namespaces": {
-    "include": ["manage_thesis.role", "manage_thesis.account", "manage_thesis.thesis"],
+    "include": ["manage_thesis.role", "manage_thesis.account", "manage_thesis.thesis", "manage_thesis.thesis_data"],
     "mapping":
     {
       "manage_thesis.role": "index.role",
-      "manage_thesis.account": "index2.account",
-	  "manage_thesis.thesis": "index3.thesiss"
+      "manage_thesis.account": "account.account",
+	  "manage_thesis.thesis": "thesis.thesis",
+	  "manage_thesis.thesis_data": "thesisdata.thesis_data"
     }
   }
 }

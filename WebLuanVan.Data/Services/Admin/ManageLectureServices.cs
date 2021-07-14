@@ -40,6 +40,22 @@ namespace WebLuanVan.Data.Services.Admin
             return result.DeletedCount > 0;
         }
 
+        public async Task<List<LectureViewModel>> GetLecture()
+        {
+            var res = await _lectureCollection.Find(x => true).ToListAsync();
+            List<LectureViewModel> li = new List<LectureViewModel>();
+            foreach(var l in res)
+            {
+                LectureViewModel lvm = new LectureViewModel()
+                {
+                    LectureId = l.LectureId,
+                    LectureName = l.LectureName
+                };
+                li.Add(lvm);
+            }
+            return li;
+        }
+
         public async Task<LectureViewModel> GetLectureById(string id)
         {
             ObjectId objId = ObjectId.Parse(id);

@@ -83,7 +83,7 @@ namespace WebLuanVan.BackendApi
             });
             //elasticSearch
             var settings = new ConnectionSettings()
-                .DefaultMappingFor<ThesisData>(x => x.IndexName("manage_thesis"));
+                .DefaultMappingFor<ThesisData>(x => x.IndexName("thesisdata"));
             services.AddSingleton<IElasticClient>(new ElasticClient(settings));
             //
 

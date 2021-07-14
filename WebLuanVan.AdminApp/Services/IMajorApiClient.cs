@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using WebLuanVan.Data.Entity;
 using WebLuanVan.Data.ViewModels.Common;
 using WebLuanVan.Data.ViewModels.ModelBinding;
 using WebLuanVan.Data.ViewModels.Request;
@@ -15,5 +16,6 @@ namespace WebLuanVan.AdminApp.Services
         Task<MajorViewModel> GetMajorById(string id);
         Task<bool> Update(MajorViewModel request);
         Task<bool> Delete(string id);
+        Task<List<FacultyViewModel>> GetFaculty();
     }
 }

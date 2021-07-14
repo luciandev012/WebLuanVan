@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using WebLuanVan.Data.Entity;
 using WebLuanVan.Data.ViewModels.Common;
 using WebLuanVan.Data.ViewModels.ModelBinding;
 using WebLuanVan.Data.ViewModels.Request;
@@ -78,6 +79,17 @@ namespace WebLuanVan.AdminApp.Services
             client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", session);
             var response = await client.PutAsync($"/api/majors", httpContent);
             return response.IsSuccessStatusCode;
+        }
+        public async Task<List<FacultyViewModel>> GetFaculty()
+        {
+            var client = _httpClientFactory.CreateClient();
+            var session = _httpContextAccessor.HttpContext.Session.GetString("Token");
+            client.BaseAddress = new Uri("https://localhost:5001");
+            client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", session);
+            var response = await client.GetAsync($"/api/faculties/list");
+            var body = await response.Content.ReadAsStringAsync();
+            var faculty = JsonConvert.DeserializeObject<List<FacultyViewModel>>(body);
+            return faculty;
         }
     }
     

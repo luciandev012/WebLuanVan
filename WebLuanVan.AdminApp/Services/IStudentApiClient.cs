@@ -15,5 +15,7 @@ namespace WebLuanVan.AdminApp.Services
         Task<StudentViewModel> GetStudentById(string id);
         Task<bool> Update(StudentViewModel request);
         Task<bool> Delete(string id);
+        Task<List<MajorViewModel>> GetMajor();
+        Task<List<FacultyViewModel>> GetFaculty();
     }
 }

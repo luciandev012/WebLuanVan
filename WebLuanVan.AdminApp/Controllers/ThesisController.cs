@@ -52,8 +52,36 @@ namespace WebLuanVan.AdminApp.Controllers
             return View(data);
         }
         [HttpGet]
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
+            var student = await _thesisApiClient.GetStudent();
+            ViewBag.Students = student.Select(x => new SelectListItem()
+            {
+                Text = x.StudentName,
+                Value = x.StudentId
+                
+            });
+            var lecture = await _thesisApiClient.GetLecture();
+            ViewBag.Lectures = lecture.Select(x => new SelectListItem()
+            {
+                Text = x.LectureName,
+                Value = x.LectureId
+
+            });
+            var faculty = await _thesisApiClient.GetFaculty();
+            ViewBag.Faculties = faculty.Select(x => new SelectListItem()
+            {
+                Text = x.FacultyName,
+                Value = x.FacultyId
+
+            });
+            var languages = _thesisApiClient.GetLanguages();
+            ViewBag.Languages = languages.Select(x => new SelectListItem()
+            {
+                Text = x.Name,
+                Value = x.LanguageId
+                
+            });
             return View();
         }
         [HttpPost]

@@ -168,5 +168,52 @@ namespace WebLuanVan.AdminApp.Services
             var charts = JsonConvert.DeserializeObject<Charts>(body);
             return charts;
         }
+
+        public async Task<List<FacultyViewModel>> GetFaculty()
+        {
+            var client = _httpClientFactory.CreateClient();
+            var session = _httpContextAccessor.HttpContext.Session.GetString("Token");
+            client.BaseAddress = new Uri("https://localhost:5001");
+            client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", session);
+            var response = await client.GetAsync($"/api/faculties/list");
+            var body = await response.Content.ReadAsStringAsync();
+            var faculty = JsonConvert.DeserializeObject<List<FacultyViewModel>>(body);
+            return faculty;
+        }
+        public async Task<List<MajorViewModel>> GetMajor()
+        {
+            var client = _httpClientFactory.CreateClient();
+            var session = _httpContextAccessor.HttpContext.Session.GetString("Token");
+            client.BaseAddress = new Uri("https://localhost:5001");
+            client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", session);
+            var response = await client.GetAsync($"/api/majors/list");
+            var body = await response.Content.ReadAsStringAsync();
+            var major = JsonConvert.DeserializeObject<List<MajorViewModel>>(body);
+            return major;
+        }
+
+        public async Task<List<StudentViewModel>> GetStudent()
+        {
+            var client = _httpClientFactory.CreateClient();
+            var session = _httpContextAccessor.HttpContext.Session.GetString("Token");
+            client.BaseAddress = new Uri("https://localhost:5001");
+            client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", session);
+            var response = await client.GetAsync($"/api/students/list");
+            var body = await response.Content.ReadAsStringAsync();
+            var student = JsonConvert.DeserializeObject<List<StudentViewModel>>(body);
+            return student;
+        }
+
+        public async Task<List<LectureViewModel>> GetLecture()
+        {
+            var client = _httpClientFactory.CreateClient();
+            var session = _httpContextAccessor.HttpContext.Session.GetString("Token");
+            client.BaseAddress = new Uri("https://localhost:5001");
+            client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", session);
+            var response = await client.GetAsync($"/api/lectures/list");
+            var body = await response.Content.ReadAsStringAsync();
+            var lecture = JsonConvert.DeserializeObject<List<LectureViewModel>>(body);
+            return lecture;
+        }
     }
 }
