@@ -62,7 +62,7 @@
                             <div class="input-group-prepend">
                                 <span class="input-group-text"><i class="fas fa-search"></i></span>
                             </div>
-                            <input class="form-control" placeholder="Search" value="@ViewBag.Keyword" type="text" name="keyword">
+                            <input class="form-control" placeholder="Search" value="@ViewBag.Keyword" type="text" name="keyword" >
                         </div>
                     </div>
                     <button type="button" class="close" data-action="search-close" data-target="#navbar-search-main" aria-label="Close">
@@ -77,22 +77,23 @@
                             </div>
                             <div class="col-md-2" id="filterRow">
 
-                                <input type="text" name="studentCode" class="form-control" />
+                                <input type="text" name="studentCode" class="form-control" value="@ViewBag.StudentCode" />
                                 <label>Mã sinh viên</label>
                             </div>
                             <div class="col-md-2" id="filterRow">
 
-                                <input type="text" name="class" class="form-control" />
+                                <input type="text" name="class" class="form-control" value="@ViewBag.Class" />
                                 <label>Lớp</label>
                             </div>
                             <div class="col-md-2" id="filterRow">
 
-                                <input type="text" name="academicYear" class="form-control" />
+                                <input type="text" name="academicYear" class="form-control" value="@ViewBag.AcademicYear" />
                                 <label>Khoá</label>
                             </div>
                             <div class="col-md-2" id="filterRow">
-
-                                <input type="text" name="faculty" class="form-control" />
+                                <select name="faculty" asp-items="@ViewBag.Faculties" class="form-control">
+                                    <option>--Chọn khoa--</option>
+                                </select>
                                 <label>Khoa</label>
                             </div>
                             <div class="col-md-2" id="filterRow">

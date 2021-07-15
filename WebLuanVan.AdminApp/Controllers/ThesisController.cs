@@ -40,6 +40,16 @@ namespace WebLuanVan.AdminApp.Controllers
             request.Role = "Admin";
             var data = await _thesisApiClient.GetThesisPaging(request);
             ViewBag.Keyword = request.Keyword;
+            ViewBag.StudentCode = request.StudentCode;
+            ViewBag.AcademicYear = request.AcademicYear;
+            
+            ViewBag.Class = request.Class;
+            var faculties = await _thesisApiClient.GetFaculty();
+            ViewBag.Faculties = faculties.Select(x => new SelectListItem()
+            {
+                Text = x.FacultyName,
+                Value = x.FacultyId
+            });
             var languages = _thesisApiClient.GetLanguages();
             ViewBag.Languages = languages.Select(x => new SelectListItem()
             {
@@ -128,6 +138,41 @@ namespace WebLuanVan.AdminApp.Controllers
                 StudentId = item.StudentId,
                 Year = item.Year
             };
+            var student = await _thesisApiClient.GetStudent();
+            ViewBag.Students = student.Select(x => new SelectListItem()
+            {
+                Text = x.StudentName,
+                Value = x.StudentId,
+                Selected = (!string.IsNullOrEmpty(request.StudentId)) && request.StudentId == x.StudentId
+            });
+            var lecture = await _thesisApiClient.GetLecture();
+            ViewBag.GuideLectures = lecture.Select(x => new SelectListItem()
+            {
+                Text = x.LectureName,
+                Value = x.LectureId,
+                Selected = (!string.IsNullOrEmpty(request.GuideLectureId)) && request.GuideLectureId == x.LectureId
+            });
+            var faculty = await _thesisApiClient.GetFaculty();
+            ViewBag.Faculties = faculty.Select(x => new SelectListItem()
+            {
+                Text = x.FacultyName,
+                Value = x.FacultyId,
+                Selected = (!string.IsNullOrEmpty(request.FacultyId)) && request.FacultyId == x.FacultyId
+            });
+            var languages = _thesisApiClient.GetLanguages();
+            ViewBag.Languages = languages.Select(x => new SelectListItem()
+            {
+                Text = x.Name,
+                Value = x.LanguageId,
+                Selected = (!string.IsNullOrEmpty(request.Language)) && request.Language == x.LanguageId
+            });
+            //var lecture = await _thesisApiClient.GetLecture();
+            ViewBag.DebateLectures = lecture.Select(x => new SelectListItem()
+            {
+                Text = x.LectureName,
+                Value = x.LectureId,
+                Selected = (!string.IsNullOrEmpty(request.DebateLectureId)) && request.DebateLectureId == x.LectureId
+            });
             ViewBag.ContentString = item.Content;
             return View(request);
         }

@@ -25,7 +25,6 @@ namespace WebLuanVan.BackendApi.Controllers
             _manageStudentServices = new ManageStudentServices(database);
         }
         [HttpPost()]
-
         public async Task<IActionResult> Post([FromBody] StudentViewModel request)
         {
             var result = await _manageStudentServices.Create(request);

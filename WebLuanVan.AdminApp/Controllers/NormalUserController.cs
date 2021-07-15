@@ -49,5 +49,15 @@ namespace WebLuanVan.AdminApp.Controllers
             return View(data);
             
         }
+        public async Task<IActionResult> Chart()
+        {
+            var session = HttpContext.Session.GetString("Token");
+            if (session == null)
+            {
+                return RedirectToAction("Login", "User");
+            }
+            var res = await _thesisApiClient.GetCharts();
+            return View(res);
+        }
     }
 }
