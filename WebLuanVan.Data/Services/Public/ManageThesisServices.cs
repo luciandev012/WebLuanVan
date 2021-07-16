@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Net.Http.Headers;
 using System.Reflection;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using WebLuanVan.Data.Entity;
@@ -61,6 +62,10 @@ namespace WebLuanVan.Data.Services.Public
             {
                 thesis.Content = await this.SaveFile(request.FileContent);
             }
+            MD5 md5Hasher = MD5.Create();
+            var hashed = md5Hasher.ComputeHash(Encoding.UTF8.GetBytes(thesis.Content));
+            var ivalue = BitConverter.ToInt32(hashed, 0) % 1000;
+            thesis.ThesisId = "lv" + ivalue;
             object missing = Missing.Value;
             object readOnly = true;
             object isvisible = true;
@@ -123,27 +128,21 @@ namespace WebLuanVan.Data.Services.Public
 
         public async Task<ApiResult<PagedResult<ThesisViewModel>>> Get(ThesisPagingRequest request)
         {
-            //if(request.Field == null)
-            //{
-            //    request.Field = "thesisName";
-            //}
+            
             if (string.IsNullOrEmpty(request.Keyword))
             {
                 request.Keyword = "";
             }
-            if (request.PageIndex == 0)
-            {
-                request.PageIndex = 1;
-            }
-            if (request.PageSize == 0)
-            {
-                request.PageSize = 5;
-            }
+            if (string.IsNullOrEmpty(request.Class)) request.Class = "";
+            if (string.IsNullOrEmpty(request.StudentCode)) request.StudentCode = "";
+            if (string.IsNullOrEmpty(request.Faculty)) request.Faculty = "";
+            if (string.IsNullOrEmpty(request.AcademicYear)) request.AcademicYear = "";
+            if (request.Faculty == "--Chọn khoa--") request.Faculty = "";
             if (string.IsNullOrEmpty(request.LanguageId))
             {
                 request.LanguageId = "";
             }
-            //var filter = Builders<Thesis>.Filter.Eq(x => x.ThesisName.ToLower().Contains(request.Keyword));
+            
             var result = new List<Thesis>();
             int totalRow = 0;
             if (!string.IsNullOrEmpty(request.Keyword) && !string.IsNullOrEmpty(request.Class) && !string.IsNullOrEmpty(request.StudentCode) && !string.IsNullOrEmpty(request.AcademicYear.ToString()))
@@ -176,6 +175,7 @@ namespace WebLuanVan.Data.Services.Public
                                 Match(m => m.Field(f => f.Summary).Query(request.Keyword)), mu => mu.
                                 Match(m => m.Field(f => f.ReferDoc).Query(request.Keyword)), mu => mu.
                                 Match(m => m.Field(f => f.Table).Query(request.Keyword))
+                                
                             )
                         )
                     )
@@ -187,15 +187,42 @@ namespace WebLuanVan.Data.Services.Public
 
                 foreach (var r in res)
                 {
-                    var t = await _thesisCollection.Find(x => x.ThesisId == r.ThesisId && x.Language == request.LanguageId).FirstOrDefaultAsync();
+                    var t = await _thesisCollection.Find(x => x.ThesisId == r.ThesisId && x.Language.Contains(request.LanguageId)).FirstOrDefaultAsync();
                     result.Add(t);
                 }
             }
             else
             {
-                result = await _thesisCollection.Find(_ => true).ToListAsync();
-                totalRow = result.Count;
+
+                if (request.Role == "Admin")
+                {
+                    var response = await _elasticClient.SearchAsync<ThesisData>(
+                    s => s.Index("thesisdata").Query(q => q.Bool(b => b.
+                            Should(mu => mu.
+                                Match(m => m.Field(f => f.ThesisName).Query(request.Keyword)), mu => mu.
+                                Match(m => m.Field(f => f.Student).Query(request.StudentCode)), mu => mu.
+                                Match(m => m.Field(f => f.Class).Query(request.Class)), mu => mu.
+                                Match(m => m.Field(f => f.AcademicYear).Query(request.AcademicYear.ToString()))
+                            )
+                        )
+                    )
+                );
+                    var res = response?.Documents?.ToList();
+                    //totalRow = (int)res.Count;
+
+                    foreach (var r in res)
+                    {
+                        var t = await _thesisCollection.Find(x => x.ThesisId == r.ThesisId && x.Language.Contains(request.LanguageId) && x.FacultyId.Contains(request.Faculty)).FirstOrDefaultAsync();
+                        result.Add(t);
+                    }
+                }
+                else
+                {
+                    result = await _thesisCollection.Find(x => true).ToListAsync();
+                }
+
             }
+            totalRow = result.Count;
             result = result.Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList();
             List<ThesisViewModel> listThesis = new List<ThesisViewModel>();
             foreach (var item in result) //Binding thesis from collection account from database
@@ -275,7 +302,7 @@ namespace WebLuanVan.Data.Services.Public
             await _storageService.DeleteFileAsync(thesis.Content);
             var arrDebateLecture = request.DebateLectureId.Trim().Split(',');
             thesis.ThesisName = request.ThesisName;
-            thesis.ThesisId = request.ThesisId;
+            //thesis.ThesisId = request.ThesisId;
             thesis.AcademicYear = request.AcademicYear;
             thesis.FacultyId = request.FacultyId;
             thesis.GuideLectureId = request.GuideLectureId;
@@ -289,6 +316,61 @@ namespace WebLuanVan.Data.Services.Public
             thesis.FinishedAt = request.FinishedAt;
             thesis.MakedAt = request.MakedAt;
             thesis.ProtectedAt = request.ProtectedAt;
+            
+            //update thesis-data
+            var filter2 = Builders<ThesisData>.Filter.Eq("thesisId", thesis.ThesisId);
+            await _thesisDataCollection.DeleteOneAsync(filter2);
+            MD5 md5Hasher = MD5.Create();
+            var hashed = md5Hasher.ComputeHash(Encoding.UTF8.GetBytes(thesis.Content));
+            int ivalue = BitConverter.ToInt32(hashed, 0) % 1000;
+            ivalue = ivalue >= 0 ? ivalue : ivalue * -1;
+            thesis.ThesisId = "lv" + ivalue;
+
+            object missing = Missing.Value;
+            object readOnly = true;
+            object isvisible = true;
+            object saveChange = false;
+            object filename = Path.Combine(_storageService.GetFolder(), thesis.Content);
+            if (File.Exists((string)filename))
+            {
+                Word.Application wordApp = new Word.Application();
+                Word.Document myWordDoc = null;
+                wordApp.Visible = false;
+                myWordDoc = wordApp.Documents.Open(ref filename, ref missing, ref readOnly,
+                                                   ref missing, ref missing, ref missing,
+                                                   ref missing, ref missing, ref missing,
+                                                   ref missing, ref missing, ref isvisible,
+                                                   ref missing, ref missing, ref missing, ref missing);
+
+                //read file
+                ReadFile rf = new ReadFile();
+                ThesisData thesisData = new ThesisData();
+                thesisData.PageCount = myWordDoc.ComputeStatistics(Word.WdStatistic.wdStatisticPages, false).ToString();
+                thesisData.University = rf.GetString("trường", myWordDoc);
+                thesisData.GuideLecture = rf.GetString("hướng dẫn", myWordDoc);
+                int id = rf.Index;
+                thesisData.ThesisName = rf.GetStringBefore(id, myWordDoc);
+                thesisData.Student = rf.GetRange("thực hiện", "lớp", myWordDoc);
+                thesisData.Class = rf.GetString("lớp", myWordDoc);
+                thesisData.AcademicYear = rf.GetString("khoá", myWordDoc);
+
+                thesisData.DebateLecture = rf.GetArrayByString("phản biện", myWordDoc);
+                thesisData.Comment = rf.GetStringAfter(new string[] { "nhận xét", "xác nhận" }, myWordDoc);
+                thesisData.Recommend = rf.GetStringAfter(new string[] { "kiến nghị", "đánh giá" }, myWordDoc);
+                thesisData.Summary = rf.GetSummay(new string[] { "tóm tắt", "tóm tắt" }, myWordDoc);
+                Word.TableOfContents oneToC = myWordDoc.TablesOfContents[1];
+                thesisData.Table = oneToC.Range.Text.ToString().Split('\r');
+                rf.Index += thesisData.Table.Length;
+                thesisData.Chapter = rf.GetChapter(myWordDoc);
+                thesisData.ReferDoc = rf.GetReferDoc(myWordDoc);
+                thesisData.ProtectedDate = thesis.ProtectedAt.ToString("dd-MM-yyyy");
+                thesisData.ThesisId = thesis.ThesisId;
+                await _thesisDataCollection.InsertOneAsync(thesisData);
+                wordApp.Quit(ref saveChange);
+            }
+            //
+
+            
             var result = await _thesisCollection.ReplaceOneAsync(filter, thesis);
 
             return (int)result.ModifiedCount;
