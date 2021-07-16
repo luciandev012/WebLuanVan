@@ -1,9 +1,12 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using GroupDocs.Viewer;
+using GroupDocs.Viewer.Options;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using WebLuanVan.AdminApp.Services;
@@ -218,6 +221,19 @@ namespace WebLuanVan.AdminApp.Controllers
         {
             await _thesisApiClient.Status(id);
             return RedirectToAction("Index");
+        }
+        [HttpGet]
+        public IActionResult ViewDocument(string content)
+        {
+            string outputFilePath = Path.Combine("https://localhost:5001/user-content/", content);
+            using(Viewer viewer = new Viewer(outputFilePath))
+            {
+                PdfViewOptions options = new PdfViewOptions(outputFilePath);
+                viewer.View(options);
+            }
+            var fileStream = new FileStream(outputFilePath, FileMode.Open, FileAccess.Read);
+            var fsResult = new FileStreamResult(fileStream, "application/pdf");
+            return fsResult;
         }
     }
 }

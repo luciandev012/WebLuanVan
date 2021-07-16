@@ -74,6 +74,11 @@ namespace WebLuanVan.AdminApp
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
+                    name: "viewDoc",
+                    pattern: "{controller=Thesis}/{action=ViewDocument}/{content}");
+
+
+                endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
