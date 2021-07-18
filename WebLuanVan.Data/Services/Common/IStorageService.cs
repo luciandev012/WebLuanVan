@@ -12,5 +12,6 @@ namespace WebLuanVan.Data.Services.Common
         Task SaveFileAsync(Stream meadiaBinaryStream, string fileName);
         Task DeleteFileAsync(string fileName);
         string GetFolder();
+        string GetPath(string filename);
     }
 }

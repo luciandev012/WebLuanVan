@@ -62,6 +62,18 @@ namespace WebLuanVan.Data.Services.Public
             {
                 thesis.Content = await this.SaveFile(request.FileContent);
             }
+            if (thesis.Content.Contains("pdf"))
+            {
+                var originalFileName = ContentDispositionHeaderValue.Parse(request.FileContent.ContentDisposition).FileName.Trim('"').ToLower();
+                string fname = originalFileName.Remove(originalFileName.IndexOf("pdf")) + "docx";
+                SautinSoft.PdfFocus f = new SautinSoft.PdfFocus();
+                f.OpenPdf(_storageService.GetPath(thesis.Content));
+                if(f.PageCount > 0)
+                {
+                    int result = f.ToWord(_storageService.GetPath(fname));
+                    thesis.Content = fname;
+                }
+            }
             MD5 md5Hasher = MD5.Create();
             var hashed = md5Hasher.ComputeHash(Encoding.UTF8.GetBytes(thesis.Content));
             var ivalue = BitConverter.ToInt32(hashed, 0) % 1000;
