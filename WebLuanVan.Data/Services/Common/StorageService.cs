@@ -36,6 +36,10 @@ namespace WebLuanVan.Data.Services.Common
             using var output = new FileStream(filePath, FileMode.Create);
             await meadiaBinaryStream.CopyToAsync(output);
         }
+        public string GetPath(string filename)
+        {
+            return Path.Combine(_userContentFolder, filename);
+        }
         public string GetFolder()
         {
             return _userContentFolder;
