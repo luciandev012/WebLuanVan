@@ -14,7 +14,7 @@ namespace WebLuanVan.Data.Entity
         [BsonElement("thesisName")]
         public string ThesisName { get; set; }
         [BsonElement("studentId")]
-        public string StudentId { get; set; }
+        public string[] StudentId { get; set; }
         [BsonElement("year")]
         public int Year { get; set; }
         [BsonElement("phase")]

@@ -39,7 +39,7 @@ namespace WebLuanVan.Data.Services.Public
         public async Task<int> Create(ThesisRequest request)
         {
             var arrDebateLecture = request.DebateLectureId.Trim().Split(',');
-
+            //var arrStudent = request.StudentId.Trim().Split(',');
             var thesis = new Thesis()
             {
                 ThesisName = request.ThesisName,
@@ -50,7 +50,7 @@ namespace WebLuanVan.Data.Services.Public
                 GuideLectureId = request.GuideLectureId,
                 DebateLectureId = arrDebateLecture,
                 Phase = request.Phase,
-                StudentId = request.StudentId,
+                StudentId = request.StudentId.Split(','),
                 Year = request.Year,
                 Language = request.Language,
                 FinishedAt = request.FinishedAt,
@@ -214,7 +214,10 @@ namespace WebLuanVan.Data.Services.Public
                                 Match(m => m.Field(f => f.ThesisName).Query(request.Keyword)), mu => mu.
                                 Match(m => m.Field(f => f.Student).Query(request.StudentCode)), mu => mu.
                                 Match(m => m.Field(f => f.Class).Query(request.Class)), mu => mu.
-                                Match(m => m.Field(f => f.AcademicYear).Query(request.AcademicYear.ToString()))
+                                Match(m => m.Field(f => f.AcademicYear).Query(request.AcademicYear.ToString())), mu => mu.
+                                Match(m => m.Field(f => f.Summary).Query(request.Keyword)), mu => mu.
+                                Match(m => m.Field(f => f.ReferDoc).Query(request.Keyword)), mu => mu.
+                                Match(m => m.Field(f => f.Table).Query(request.Keyword))
                             )
                         )
                     )
@@ -224,8 +227,11 @@ namespace WebLuanVan.Data.Services.Public
 
                     foreach (var r in res)
                     {
-                        var t = await _thesisCollection.Find(x => x.ThesisId == r.ThesisId && x.Language.Contains(request.LanguageId) && x.FacultyId.Contains(request.Faculty)).FirstOrDefaultAsync();
-                        result.Add(t);
+                        if(r != null)
+                        {
+                            var t = await _thesisCollection.Find(x => x.ThesisId == r.ThesisId && x.Language.Contains(request.LanguageId) && x.FacultyId.Contains(request.Faculty)).FirstOrDefaultAsync();
+                            result.Add(t);
+                        }
                     }
                 }
                 else
@@ -319,7 +325,7 @@ namespace WebLuanVan.Data.Services.Public
             thesis.FacultyId = request.FacultyId;
             thesis.GuideLectureId = request.GuideLectureId;
             thesis.Phase = request.Phase;
-            thesis.StudentId = request.StudentId;
+            thesis.StudentId = request.StudentId.Trim().Split(',');
             thesis.Year = request.Year;
             thesis.Language = request.Language;
             thesis.DebateLectureId = arrDebateLecture;
