@@ -11,8 +11,10 @@ namespace WebLuanVan.Data.ViewModels.ModelBinding
         public string Id { get; set; }
         [Display(Name = "Tên luận văn")]
         public string ThesisName { get; set; }
+        [UIHint("DebateLecture")]
         [Display(Name = "Mã sinh viên")]
-        public string StudentId { get; set; }
+        [UIHint("Student")]
+        public string[] StudentId { get; set; }
         [Display(Name = "Năm")]
         public int Year { get; set; }
         [Display(Name = "Đợt")]

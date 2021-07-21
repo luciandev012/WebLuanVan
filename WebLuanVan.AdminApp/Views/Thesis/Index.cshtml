@@ -140,7 +140,7 @@
                             <tr>
                                 <td>
                                     <p>@Html.DisplayFor(modelItem => item.ThesisName)</p>
-                                    <p><a href="ViewDocument/@item.Content" name="content">Link online</a></p>
+                                    @*<p><a href="ViewDocument/@item.Content" name="content">Link online</a></p>*@
                                     <p><a href="@(ViewBag.FilePath + item.Content)">Download offline</a></p>
                                 </td>
 

@@ -101,6 +101,7 @@ namespace WebLuanVan.AdminApp.Controllers
         [Consumes("multipart/form-data")]
         public async Task<IActionResult> Create([FromForm] ThesisRequest request)
         {
+
             var result = await _thesisApiClient.Create(request);
             if (result)
             {
@@ -120,7 +121,11 @@ namespace WebLuanVan.AdminApp.Controllers
             {
                 debateLecture += i.ToString();
             }
-            
+            string studentId = "";
+            foreach (var i in item.StudentId)
+            {
+                studentId += i.ToString();
+            }
             var request = new ThesisRequest()
             {
                 ThesisName = item.ThesisName,
@@ -138,7 +143,7 @@ namespace WebLuanVan.AdminApp.Controllers
                 Phase = item.Phase,
                 Score = (int)item.Score,
                 ProtectedAt = item.ProtectedAt,
-                StudentId = item.StudentId,
+                StudentId = studentId,
                 Year = item.Year
             };
             var student = await _thesisApiClient.GetStudent();

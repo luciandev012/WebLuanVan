@@ -11,6 +11,7 @@ namespace WebLuanVan.Data.ViewModels.Request.Thesis
         public string Id { get; set; }
         [Display(Name = "Tên luận văn")]
         public string ThesisName { get; set; }
+        
         [Display(Name = "Mã sinh viên")]
         public string StudentId { get; set; }
         [Display(Name = "Năm")]
